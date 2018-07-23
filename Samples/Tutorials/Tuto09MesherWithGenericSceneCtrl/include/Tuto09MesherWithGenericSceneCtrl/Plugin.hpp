@@ -40,6 +40,12 @@ public:
     TUTO09MESHERWITHGENERICSCENECTRL_API void uninitialize() noexcept;
 
 private:
+
+    /// Register the object to the service, and eventually unregister the previous object and start it
+    void registerObj(const ::fwServices::IService::sptr& srv, const ::fwData::Object::sptr& obj,
+                     const ::fwServices::IService::KeyType& key, const ::fwServices::IService::AccessType access,
+                     bool autoConnect = false, bool optional = false);
+
     std::vector< ::fwServices::IService::sptr > m_startedService;
 
     std::vector< ::fwCom::SlotBase::sptr > m_slots;

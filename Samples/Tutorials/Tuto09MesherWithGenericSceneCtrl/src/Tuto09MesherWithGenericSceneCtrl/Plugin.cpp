@@ -451,38 +451,20 @@ void Plugin::initialize()
                     showScanEditor->signal("toggled")->connect(imageAdaptor->slot(
                                                                    "showSlice"));
 
-                    if (::fwServices::OSR::isRegistered("image",
-                                                        ::fwServices::IService::
-                                                        AccessType::INOUT,
-                                                        imageAdaptor))
+                    this->registerObj(imageAdaptor, image, ::fwServices::IService::AccessType::INOUT, "image", true);
+                    this->registerObj(sliderIndexEditor, image, ::fwServices::IService::AccessType::INOUT, "image",
+                                      true);
+                    this->registerObj(mesher50, imageSeries, ::fwServices::IService::AccessType::INPUT, "imageSeries");
+                    this->registerObj(mesher80, imageSeries, ::fwServices::IService::AccessType::INPUT, "imageSeries");
+
+                    if (!actionCreateMesh50->isStarted())
                     {
-                        imageAdaptor->stop();
-                        ::fwServices::OSR::unregisterService("image",
-                                                             ::fwServices::IService::AccessType::INOUT,
-                                                             imageAdaptor);
-                        sliderIndexEditor->stop();
-                        ::fwServices::OSR::unregisterService("image",
-                                                             ::fwServices::IService::AccessType::INOUT,
-                                                             sliderIndexEditor);
-                        mesher50->stop();
-                        ::fwServices::OSR::unregisterService("imageSeries",
-                                                             ::fwServices::IService::AccessType::INPUT,
-                                                             mesher50);
-                        mesher80->stop();
-                        ::fwServices::OSR::unregisterService("imageSeries",
-                                                             ::fwServices::IService::AccessType::INPUT,
-                                                             mesher80);
+                        actionCreateMesh50->start();
                     }
-                    imageAdaptor->registerInOut(image, "image", true);
-                    sliderIndexEditor->registerInOut(image, "image", true);
-                    mesher50->registerInput(imageSeries, "imageSeries");
-                    mesher80->registerInput(imageSeries, "imageSeries");
-                    imageAdaptor->start();
-                    sliderIndexEditor->start();
-                    mesher50->start();
-                    mesher80->start();
-                    actionCreateMesh50->start();
-                    actionCreateMesh80->start();
+                    if (!actionCreateMesh80->isStarted())
+                    {
+                        actionCreateMesh80->start();
+                    }
 
                     m_startedService.emplace_back(imageAdaptor);
                     m_startedService.emplace_back(sliderIndexEditor);
@@ -500,24 +482,10 @@ void Plugin::initialize()
     std::function<void(::fwData::Object::sptr)>  recSelectedFct =
         [ = ] (::fwData::Object::sptr rec)
         {
-            if (organMaterialEditor->isStarted())
-            {
-                organMaterialEditor->stop();
-                ::fwServices::OSR::unregisterService("reconstruction",
-                                                     ::fwServices::IService::
-                                                     AccessType::INOUT,
-                                                     organMaterialEditor);
-
-                representationEditor->stop();
-                ::fwServices::OSR::unregisterService("reconstruction",
-                                                     ::fwServices::IService::
-                                                     AccessType::INOUT,
-                                                     representationEditor);
-            }
-            organMaterialEditor->registerInOut(rec, "reconstruction", true);
-            representationEditor->registerInOut(rec, "reconstruction", true);
-            organMaterialEditor->start();
-            representationEditor->start();
+            this->registerObj(organMaterialEditor, rec, "reconstruction", ::fwServices::IService::AccessType::INOUT,
+                              true);
+            this->registerObj(representationEditor, rec, "reconstruction", ::fwServices::IService::AccessType::INOUT,
+                              true);
             m_startedService.emplace_back(organMaterialEditor);
             m_startedService.emplace_back(representationEditor);
         };
@@ -532,23 +500,9 @@ void Plugin::initialize()
                 "modelSeries");
             if (model)
             {
-                if (modelSeriesAdaptor->isStarted())
-                {
-                    modelSeriesAdaptor->stop();
-                    ::fwServices::OSR::unregisterService("modelSeries",
-                                                         ::fwServices::IService::
-                                                         AccessType::INPUT,
-                                                         modelSeriesAdaptor);
-                    listOrganEditor->stop();
-                    ::fwServices::OSR::unregisterService("modelSeries",
-                                                         ::fwServices::IService::
-                                                         AccessType::INOUT,
-                                                         listOrganEditor);
-                }
-                modelSeriesAdaptor->registerInput(model, "model", true);
-                listOrganEditor->registerInOut(model, "modelSeries", true);
-                modelSeriesAdaptor->start();
-                listOrganEditor->start();
+                this->registerObj(modelSeriesAdaptor, model, "model", ::fwServices::IService::AccessType::INPUT, true);
+                this->registerObj(listOrganEditor, model, "modelSeries", ::fwServices::IService::AccessType::INOUT,
+                                  true);
                 m_startedService.emplace_back(modelSeriesAdaptor);
                 m_startedService.emplace_back(listOrganEditor);
 
@@ -609,6 +563,24 @@ void Plugin::uninitialize() noexcept
         ::fwServices::OSR::unregisterService(srv);
     }
     m_startedService.clear();
+}
+
+//------------------------------------------------------------------------------
+
+void registerObj(const ::fwServices::IService::sptr& srv, const ::fwData::Object::sptr& obj,
+                 const ::fwServices::IService::KeyType& key, const ::fwServices::IService::AccessType access,
+                 bool autoConnect, bool optional)
+{
+    if (srv->isStarted())
+    {
+        srv->stop();
+    }
+    if (::fwServices::OSR::isRegistered(key, access, srv))
+    {
+        srv->unregisterObject(key, access);
+    }
+    srv->registerObject(obj, key, access, autoConnect, optional);
+    srv->start();
 }
 
 //------------------------------------------------------------------------------
