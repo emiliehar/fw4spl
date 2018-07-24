@@ -70,6 +70,7 @@ SRender::SRender() noexcept :
     m_width(160),
     m_height(90),
     m_offScreen(false),
+    m_useContainer(true),
     m_flip(false)
 {
     newSignal<DroppedSignalType>(s_DROPPED_SIG);
@@ -235,14 +236,17 @@ void SRender::configuring()
 
     m_flip = (srvConf.get<std::string>("flip", "false") == "true");
 
+    m_useContainer = srvConf.get< bool >("<xmlattr>.useContainer", m_useContainer);
+
     if(nbInouts == 1)
     {
         const std::string key = srvConf.get<std::string>("inout.<xmlattr>.key", "");
-        m_offScreen = (key == s_OFFSCREEN_INOUT);
+        m_offScreen    = (key == s_OFFSCREEN_INOUT);
+        m_useContainer = false;
 
         SLM_ASSERT("'" + key + "' is not a valid key. Only '" + s_OFFSCREEN_INOUT +"' is accepted.", m_offScreen);
     }
-    else // no offscreen rendering.
+    else if (m_useContainer) // no offscreen rendering.
     {
         SLM_WARN_IF("Flip tag is set to 'true' but no off screen render image is used.", m_flip);
         this->initialize();
@@ -306,7 +310,7 @@ void SRender::configuring()
 
 void SRender::starting()
 {
-    if (!m_offScreen)
+    if (m_useContainer)
     {
         this->create();
     }
@@ -424,7 +428,7 @@ void SRender::render()
 
 bool SRender::isShownOnScreen()
 {
-    if (!m_offScreen)
+    if (m_useContainer)
     {
         return this->getContainer()->isShownOnScreen();
     }
@@ -475,17 +479,17 @@ void SRender::toggleAutoRender()
 
 void SRender::startContext()
 {
-    if (!m_offScreen)
-    {
-        m_interactorManager = ::fwRenderVTK::IVtkRenderWindowInteractorManager::createManager();
-        m_interactorManager->installInteractor( this->getContainer() );
-    }
-    else
+    if (m_offScreen)
     {
         ::fwRenderVTK::OffScreenInteractorManager::sptr interactorManager =
             ::fwRenderVTK::OffScreenInteractorManager::New();
         interactorManager->installInteractor(m_width, m_height);
         m_interactorManager = interactorManager;
+    }
+    else if (!m_interactorManager)
+    {
+        m_interactorManager = ::fwRenderVTK::IVtkRenderWindowInteractorManager::createManager();
+        m_interactorManager->installInteractor( this->getContainer() );
     }
 
     auto interactor = vtkSmartPointer<InteractorStyle3DForNegato>::New();
@@ -499,7 +503,6 @@ void SRender::startContext()
     m_interactorManager->getInteractor()->GetRenderWindow()->SetAlphaBitPlanes(1);
     m_interactorManager->getInteractor()->GetRenderWindow()->SetMultiSamples(0);
 #endif
-
 }
 
 //-----------------------------------------------------------------------------
