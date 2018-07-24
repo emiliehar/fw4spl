@@ -10,6 +10,7 @@ set( DEPENDENCIES
     fwServices
     fwCom
     fwRuntime
+    fwVTKQml
 )
 set( REQUIREMENTS
     ctrlCamp

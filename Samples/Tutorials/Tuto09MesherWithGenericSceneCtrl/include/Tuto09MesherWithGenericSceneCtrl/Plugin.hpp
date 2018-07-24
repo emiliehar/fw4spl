@@ -14,6 +14,9 @@
 
 #include <fwServices/IService.hpp>
 
+#include <QPointer>
+#include <QQmlApplicationEngine>
+
 namespace Tuto09MesherWithGenericSceneCtrl
 {
 
@@ -41,14 +44,7 @@ public:
 
 private:
 
-    /// Register the object to the service, and eventually unregister the previous object and start it
-    void registerObj(const ::fwServices::IService::sptr& srv, const ::fwData::Object::sptr& obj,
-                     const ::fwServices::IService::KeyType& key, const ::fwServices::IService::AccessType access,
-                     bool autoConnect = false, bool optional = false);
-
-    std::vector< ::fwServices::IService::sptr > m_startedService;
-
-    std::vector< ::fwCom::SlotBase::sptr > m_slots;
+    QPointer<QQmlApplicationEngine> m_engine;
 
 };
 
