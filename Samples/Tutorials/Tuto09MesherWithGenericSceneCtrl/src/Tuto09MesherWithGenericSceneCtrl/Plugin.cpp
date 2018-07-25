@@ -14,8 +14,6 @@
 
 #include "Tuto09MesherWithGenericSceneCtrl/Tuto09Manager.hpp"
 
-#include <fwQml/IQmlRegistry.hpp>
-
 #include <fwRuntime/operations.hpp>
 #include <fwRuntime/utils/GenericExecutableFactoryRegistrar.hpp>
 
@@ -54,8 +52,6 @@ void Plugin::start()
 
 void Plugin::initialize()
 {
-    ::fwQml::IQmlRegistry::registarAllClasses();
-
     m_engine = new QQmlApplicationEngine();
 
     auto path = ::fwRuntime::getBundleResourceFilePath("Tuto09MesherWithGenericSceneCtrl-0.1/ui.qml");
