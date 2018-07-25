@@ -9,7 +9,7 @@
 # include "fwVTKQml/config.hpp"
 
 #include <QOpenGLFramebufferObject>
-#include <QOpenGLFunctions_2_0>
+#include <QOpenGLFunctions_3_1>
 #include <QQuickFramebufferObject>
 #include <vtkCamera.h>
 #include <vtkExternalOpenGLRenderWindow.h>
@@ -28,7 +28,7 @@ class FrameBufferRenderer;
  * This class is used to render a offscreen VTK window in a FrameBuffer
  */
 class FWVTKQML_CLASS_API vtkInternalOpenGLRenderWindow : public vtkExternalOpenGLRenderWindow,
-                                                         protected QOpenGLFunctions_2_0
+                                                         protected QOpenGLFunctions_3_1
 {
 public:
     friend class FrameBufferRenderer;

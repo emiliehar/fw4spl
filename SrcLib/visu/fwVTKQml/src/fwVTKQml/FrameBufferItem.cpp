@@ -115,7 +115,7 @@ FrameBufferItem::FrameBufferItem(QQuickItem* parent) :
     m_renderer = vtkSmartPointer<vtkRenderer>::New();
     this->setAcceptedMouseButtons(Qt::AllButtons);
     m_win = vtkSmartPointer<vtkInternalOpenGLRenderWindow>::New();
-    m_win->SetSize(width(), height());
+    m_win->SetSize(static_cast<int>(this->width()), static_cast<int>(this->height()));
     m_win->AddRenderer(m_renderer);
     m_interactor = vtkSmartPointer<QVTKInteractor>::New();
     m_win->SetInteractor(m_interactor);
@@ -161,9 +161,8 @@ vtkSmartPointer<vtkRenderer>    FrameBufferItem::getRenderer() const
 
 void FrameBufferItem::initialize()
 {
-    m_win->SetSize(width(), height());
+    m_win->SetSize(static_cast<int>(this->width()), static_cast<int>(this->height()));
     m_interactor->SetSize(m_win->GetSize());
-    m_win->OpenGLInit();
 }
 
 //-----------------------------------------------------------------------------
