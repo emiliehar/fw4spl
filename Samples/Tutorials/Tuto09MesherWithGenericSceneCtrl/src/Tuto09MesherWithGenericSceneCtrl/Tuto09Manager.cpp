@@ -4,12 +4,6 @@
  * published by the Free Software Foundation.
  * ****** END LICENSE BLOCK ****** */
 
-/* ***** BEGIN LICENSE BLOCK *****
- * FW4SPL - Copyright (C) IRCAD,2018.
- * Distributed under the terms of the GNU Lesser General Public License (LGPL) as
- * published by the Free Software Foundation.
- * ****** END LICENSE BLOCK ****** */
-
 #include "Tuto09MesherWithGenericSceneCtrl/Tuto09Manager.hpp"
 
 #include <fwCom/Signal.hxx>
@@ -62,67 +56,73 @@ Tuto09Manager::~Tuto09Manager() noexcept
 
 void Tuto09Manager::initialize()
 {
-    // generic scene
-    auto renderSrv = ::fwServices::add< ::fwRenderVTK::SRender >("::fwRenderVTK::SRender", "genericScene");
-    m_imageAdaptor       = ::fwServices::add("::visuVTKAdaptor::SNegatoMPR", "imageAdaptor");
-    m_modelSeriesAdaptor = ::fwServices::add("::visuVTKAdaptor::SModelSeries", "modelSeriesAdaptor");
-    auto snapshotAdaptor = ::fwServices::add("::visuVTKAdaptor::SSnapshot", "snapshotAdaptor");
+    if (!m_isInitialized)
+    {
+        // generic scene
+        auto renderSrv = ::fwServices::add< ::fwRenderVTK::SRender >("::fwRenderVTK::SRender");
+        m_imageAdaptor       = ::fwServices::add("::visuVTKAdaptor::SNegatoMPR");
+        m_modelSeriesAdaptor = ::fwServices::add("::visuVTKAdaptor::SModelSeries");
+        auto snapshotAdaptor = ::fwServices::add("::visuVTKAdaptor::SSnapshot");
 
-    /* **************************************************************************************
-    *              genericScene configuration
-    ****************************************************************************************/
+        /* **************************************************************************************
+        *              genericScene configuration
+        ****************************************************************************************/
 
-    // create and register the render service
-    ::fwServices::IService::ConfigType renderConfig;
-    ::fwServices::IService::ConfigType pickerConfig;
-    pickerConfig.add("<xmlattr>.vtkclass", "fwVtkCellPicker");
-    pickerConfig.add("<xmlattr>.id", "picker");
-    renderConfig.add_child("scene.picker", pickerConfig);
-    renderConfig.add("scene.renderer.<xmlattr>.id", "default");
-    ::fwServices::IService::ConfigType adpt1Config;
-    adpt1Config.put("<xmlattr>.uid", "modelSeriesAdaptor");
-    renderConfig.add_child("scene.adaptor", adpt1Config);
-    ::fwServices::IService::ConfigType adpt2Config;
-    adpt2Config.put("<xmlattr>.uid", "imageAdaptor");
-    renderConfig.add_child("scene.adaptor", adpt2Config);
-    ::fwServices::IService::ConfigType adpt3Config;
-    adpt3Config.put("<xmlattr>.uid", "snapshotAdaptor");
-    renderConfig.add_child("scene.adaptor", adpt3Config);
-    renderSrv->setConfiguration(renderConfig);
-    renderSrv->useContainer(false);
+        // create and register the render service
+        ::fwServices::IService::ConfigType renderConfig;
+        ::fwServices::IService::ConfigType pickerConfig;
+        pickerConfig.add("<xmlattr>.vtkclass", "fwVtkCellPicker");
+        pickerConfig.add("<xmlattr>.id", "picker");
+        renderConfig.add_child("scene.picker", pickerConfig);
+        renderConfig.add("scene.renderer.<xmlattr>.id", "default");
+        ::fwServices::IService::ConfigType adpt1Config;
+        adpt1Config.put("<xmlattr>.uid", m_modelSeriesAdaptor->getID());
+        renderConfig.add_child("scene.adaptor", adpt1Config);
+        ::fwServices::IService::ConfigType adpt2Config;
+        adpt2Config.put("<xmlattr>.uid", m_imageAdaptor->getID());
+        renderConfig.add_child("scene.adaptor", adpt2Config);
+        ::fwServices::IService::ConfigType adpt3Config;
+        adpt3Config.put("<xmlattr>.uid", snapshotAdaptor->getID());
+        renderConfig.add_child("scene.adaptor", adpt3Config);
+        renderSrv->setConfiguration(renderConfig);
+        renderSrv->useContainer(false);
 
-    auto interactorManager = ::fwRenderVTK::factory::New< ::fwVTKQml::VtkRenderWindowInteractorManager >();
-    SLM_ASSERT("Frame Buffer is not yet defined", m_frameBuffer);
-    interactorManager->setFrameBuffer(m_frameBuffer);
-    renderSrv->setInteractorManager(interactorManager);
-    renderSrv->configure();
+        auto interactorManager = ::fwRenderVTK::factory::New< ::fwVTKQml::VtkRenderWindowInteractorManager >();
+        SLM_ASSERT("Frame Buffer is not yet defined", m_frameBuffer);
+        interactorManager->setFrameBuffer(m_frameBuffer);
+        renderSrv->setInteractorManager(interactorManager);
+        renderSrv->configure();
 
-    ::fwServices::IService::ConfigType imageAdaptorConfig;
-    imageAdaptorConfig.add("config.<xmlattr>.renderer", "default");
-    imageAdaptorConfig.add("config.<xmlattr>.picker", "picker");
-    imageAdaptorConfig.add("config.<xmlattr>.mode", "3d");
-    imageAdaptorConfig.add("config.<xmlattr>.slice", "3");
-    imageAdaptorConfig.add("config.<xmlattr>.sliceIndex", "axial");
-    m_imageAdaptor->setConfiguration(imageAdaptorConfig);
-    m_imageAdaptor->configure();
+        ::fwServices::IService::ConfigType imageAdaptorConfig;
+        imageAdaptorConfig.add("config.<xmlattr>.renderer", "default");
+        imageAdaptorConfig.add("config.<xmlattr>.picker", "picker");
+        imageAdaptorConfig.add("config.<xmlattr>.mode", "3d");
+        imageAdaptorConfig.add("config.<xmlattr>.slice", "3");
+        imageAdaptorConfig.add("config.<xmlattr>.sliceIndex", "axial");
+        m_imageAdaptor->setConfiguration(imageAdaptorConfig);
+        m_imageAdaptor->configure();
 
-    ::fwServices::IService::ConfigType modelSeriesAdaptorConfig;
-    modelSeriesAdaptorConfig.add("config.<xmlattr>.renderer", "default");
-    modelSeriesAdaptorConfig.add("config.<xmlattr>.picker", "");
-    m_modelSeriesAdaptor->setConfiguration(modelSeriesAdaptorConfig);
-    m_modelSeriesAdaptor->configure();
+        ::fwServices::IService::ConfigType modelSeriesAdaptorConfig;
+        modelSeriesAdaptorConfig.add("config.<xmlattr>.renderer", "default");
+        modelSeriesAdaptorConfig.add("config.<xmlattr>.picker", "");
+        m_modelSeriesAdaptor->setConfiguration(modelSeriesAdaptorConfig);
+        m_modelSeriesAdaptor->configure();
 
-    ::fwServices::IService::ConfigType snapshotAdaptorConfig;
-    snapshotAdaptorConfig.add("config.<xmlattr>.renderer", "default");
-    snapshotAdaptor->setConfiguration(snapshotAdaptorConfig);
-    snapshotAdaptor->configure();
+        ::fwServices::IService::ConfigType snapshotAdaptorConfig;
+        snapshotAdaptorConfig.add("config.<xmlattr>.renderer", "default");
+        snapshotAdaptor->setConfiguration(snapshotAdaptorConfig);
+        snapshotAdaptor->configure();
 
-    /* **************************************************************************************
-    *              start the services
-    ****************************************************************************************/
+        /* **************************************************************************************
+        *              start the services
+        ****************************************************************************************/
 
-    renderSrv->start();
-    m_startedService.emplace(renderSrv);
+        renderSrv->start();
+        snapshotAdaptor->start();
+        m_startedService.emplace(renderSrv);
+        m_startedService.emplace(snapshotAdaptor);
+        m_isInitialized = true;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -163,6 +163,7 @@ void Tuto09Manager::onOpenImage()
 
             this->registerObj(m_imageAdaptor, image, "image",  ::fwServices::IService::AccessType::INOUT, true);
             m_loadedImageSeries = imageSeries;
+            Q_EMIT imageLoaded();
         }
     }
 }
@@ -174,7 +175,7 @@ void Tuto09Manager::onSaveMesh()
     if (m_modelSeries)
     {
         auto modelSeriesWriter = ::fwServices::add("::uiIO::editor::SIOSelector");
-        modelSeriesWriter->registerInput(m_modelSeries, "data");
+        modelSeriesWriter->registerInOut(m_modelSeries, "data");
         ::fwServices::IService::ConfigType modelSeriesWriterConfig;
         modelSeriesWriterConfig.put("type.<xmlattr>.mode", "writer");
         modelSeriesWriter->setConfiguration(modelSeriesWriterConfig);
@@ -205,6 +206,7 @@ void Tuto09Manager::applyMesher(unsigned int reduction)
         mesher->stop();
         ::fwServices::OSR::unregisterService(mesher);
 
+        SLM_ASSERT("modelSeries is not created", m_modelSeries);
         this->registerObj(m_modelSeriesAdaptor, m_modelSeries, "model", ::fwServices::IService::AccessType::INPUT,
                           true);
     }

@@ -15,6 +15,14 @@ ApplicationWindow {
     Tuto09Manager {
         id: tuto09
         frameBuffer: scene3D
+
+        onImageLoaded: {
+            sliceEditor.visible=true
+            displayScanButton.visible = true
+            saveMesh.enabled = true
+            actionMesh50.enabled = true
+            actionMesh80.enabled = true
+        }
     }
 
     MenuBar {
@@ -27,8 +35,10 @@ ApplicationWindow {
                 onTriggered: tuto09.onOpenImage()
             }
             MenuItem {
+                id: saveMesh
                 text: "Save mesh"
                 shortcut: "Ctrl+S"
+                enabled: false
                 onTriggered: tuto09.onSaveMesh()
             }
             MenuItem {
@@ -40,11 +50,15 @@ ApplicationWindow {
             title: "Mesher"
 
             MenuItem {
+                id: actionMesh50
                 text: "Create Mesh 50"
+                enabled: false
                 onTriggered: tuto09.applyMesher(50)
             }
             MenuItem {
+                id: actionMesh80
                 text: "Create Mesh 80"
+                enabled: false
                 onTriggered: tuto09.applyMesher(80)
             }
         }
@@ -56,7 +70,7 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "red"
+            color: "#006699"
 
             FrameBuffer {
                 id: scene3D
@@ -82,11 +96,12 @@ ApplicationWindow {
 
                 color: "transparent"
                 ComboBox {
-                    id: sliderIndexEditor
+                    id: sliceEditor
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 4
+                    visible: false
 
 
                     model: ["One slice", "Three slice"]
@@ -104,6 +119,8 @@ ApplicationWindow {
 
                 color: "transparent"
                 Button {
+                    id: displayScanButton
+                    visible: false
                     checkable: true
                     checked: false
                     anchors.left: parent.left
@@ -123,6 +140,7 @@ ApplicationWindow {
                 color: "transparent"
 
                 Button {
+                    id: snapButton
                     text: "Snap"
                     anchors.fill: parent
                     anchors.rightMargin: 4

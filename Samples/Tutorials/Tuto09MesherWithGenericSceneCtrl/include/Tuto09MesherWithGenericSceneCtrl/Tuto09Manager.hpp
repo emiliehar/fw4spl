@@ -45,11 +45,14 @@ public Q_SLOTS:
     void onSaveMesh();
     void applyMesher(unsigned int reduction);
 
+Q_SIGNALS:
+
+    void imageLoaded();
+
 private:
 
+    bool m_isInitialized{false};
     ::fwVTKQml::FrameBufferItem* m_frameBuffer;
-    int m_width;
-
     ::fwMedData::ImageSeries::sptr m_loadedImageSeries;
     ::fwMedData::ModelSeries::sptr m_modelSeries;
     ::fwServices::IService::sptr m_imageAdaptor;
