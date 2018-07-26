@@ -287,9 +287,7 @@ void SRender::configuring()
 
         SLM_FATAL_IF("Missing 'uid' attribute in adaptor configuration", adaptorUid == "");
 
-        // register the <adaptor, scene> association
-        auto& registry = ::fwRenderVTK::registry::getAdaptorRegistry();
-        registry[adaptorUid] = this->getID();
+        this->displayAdaptor(adaptorUid);
     }
 
     /// Target frame rate (default 30Hz)
@@ -363,7 +361,7 @@ void SRender::stopping()
 
     this->stopContext();
 
-    if (!m_offScreen)
+    if (m_useContainer)
     {
         this->destroy();
     }
@@ -592,6 +590,15 @@ void SRender::setOffScreenRenderSize(unsigned int _width, unsigned int _height)
         m_interactorManager->getInteractor()->GetRenderWindow()->SetSize(static_cast<int>(m_width),
                                                                          static_cast<int>(m_height));
     }
+}
+
+//-----------------------------------------------------------------------------
+
+void SRender::displayAdaptor(const std::string& adaptorID)
+{
+    // register the <adaptor, scene> association
+    auto& registry = ::fwRenderVTK::registry::getAdaptorRegistry();
+    registry[adaptorID] = this->getID();
 }
 
 //-----------------------------------------------------------------------------

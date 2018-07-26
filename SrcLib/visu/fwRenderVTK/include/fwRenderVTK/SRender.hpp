@@ -165,6 +165,8 @@ public:
     /// If true, the scene use the IGuiContainer methods (create and initialize). It should be called before configure.
     void useContainer(bool useContainer);
 
+    /// register the adaptor to be displayed in this scene
+    void displayAdaptor(const std::string& adaptorID);
 protected:
 
     /// Renders the scene.
