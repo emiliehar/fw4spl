@@ -38,7 +38,7 @@
 namespace Tuto09MesherWithGenericSceneCtrl
 {
 
-static ::fwQml::QmlRegistry<Tuto09Manager> registrar("fw4spl.tuto.Tuto09Manager", 1, 0, "Tuto09Manager");
+static ::fwQml::QmlRegistry<Tuto09Manager> registrar("tuto.Tuto09Manager", 1, 0, "Tuto09Manager");
 
 //------------------------------------------------------------------------------
 
@@ -224,34 +224,13 @@ void Tuto09Manager::onShowScan(bool isShown)
 
 //------------------------------------------------------------------------------
 
-void Tuto09Manager::onUpdateSliceMode(int mode)
+void Tuto09Manager::onImageSliceSelectorCreated(QString uid)
 {
-    m_imageAdaptor->slot("updateSliceMode")->asyncRun(mode);
-}
+    const std::string uidStr = uid.toStdString();
 
-//------------------------------------------------------------------------------
-
-void Tuto09Manager::onUpdatedSliceIndex(int index, int value)
-{
-    auto image       = m_loadedImageSeries->getImage();
-    auto axialIdx    = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_axialSliceIndexId);
-    auto frontalIdx  = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_frontalSliceIndexId);
-    auto sagittalIdx = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_sagittalSliceIndexId);
-    switch (index)
-    {
-        case ::fwDataTools::helper::MedicalImageAdaptor::X_AXIS:
-            sagittalIdx->value() = value;
-            break;
-        case ::fwDataTools::helper::MedicalImageAdaptor::Y_AXIS:
-            frontalIdx->value() = value;
-            break;
-        case ::fwDataTools::helper::MedicalImageAdaptor::Z_AXIS:
-            axialIdx->value() = value;
-            break;
-    }
-    auto sig = image->signal< ::fwData::Image::SliceIndexModifiedSignalType >(
-        ::fwData::Image::s_SLICE_INDEX_MODIFIED_SIG);
-    sig->asyncEmit(axialIdx->value(), frontalIdx->value(), sagittalIdx->value());
+    auto obj = ::fwTools::fwID::getObject(uidStr);
+    auto srv = ::fwServices::IService::dynamicCast(obj);
+    SLM_ASSERT("service '" + uidStr + "' is not defined", srv);
 }
 
 //------------------------------------------------------------------------------

@@ -3,8 +3,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
-import fw4spl.tuto.Tuto09Manager 1.0
-import fw4spl.fwVTKQml 1.0
+import tuto.Tuto09Manager 1.0
+import fwVTKQml 1.0
 import uiImageQml 1.0
 
 ApplicationWindow {
@@ -147,8 +147,8 @@ ApplicationWindow {
                 from: 0
                 to: 80
 
-                onUpdatedSliceIndex: {
-                    tuto09.onUpdatedSliceIndex(index, value)
+                onServiceCreated: {
+                    tuto09.imageSliceSelectorCreated(uid)
                 }
             }
 

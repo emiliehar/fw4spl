@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.0
+import uiImageQml 1.0
 
 Item {
     id: sliceIndexSelector
@@ -10,8 +11,34 @@ Item {
     property int to: 0
     property int sliceIndex: 2
 
-    signal updatedSliceIndex(int index, int value)
-    signal updatedSliceType(int from, int to);
+    signal serviceCreated(string uid)
+
+    onVisibleChanged: {
+        if (visible==true){
+            sliceIndexEditor.initialize()
+        }
+    }
+
+    SliceIndexPositionEditor {
+        id: sliceIndexEditor
+
+        onCreated:{
+            sliceIndexSelector.serviceCreated(uid)
+        }
+
+        onSetSliceRange: {
+            from = min
+            to = max
+        }
+
+        onSetSliceValue: {
+            slider.value = value
+        }
+
+        onSetSliceType: {
+            sliceType.currentIndex = index
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -33,11 +60,10 @@ Item {
                 currentIndex: sliceIndexSelector.sliceIndex
 
                 onActivated: {
-                    updatedSliceType(sliceIndexSelector.sliceIndex, index)
+                    sliceIndexEditor.onSliceType(index)
                     sliceIndexSelector.sliceIndex = index
                 }
             }
-
         }
 
         Rectangle {
@@ -57,7 +83,7 @@ Item {
 
                 onValueChanged: {
                     textField.text = value + " / " + to
-                    updatedSliceIndex(sliceIndexSelector.sliceIndex, value)
+                    sliceIndexEditor.onSliceIndex(value)
                 }
             }
         }

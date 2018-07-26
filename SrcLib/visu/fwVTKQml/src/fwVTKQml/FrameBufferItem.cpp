@@ -32,7 +32,7 @@
 namespace fwVTKQml
 {
 
-static ::fwQml::QmlRegistry<FrameBufferItem> registrar("fw4spl.fwVTKQml", 1, 0, "FrameBuffer");
+static ::fwQml::QmlRegistry<FrameBufferItem> registrar("fwVTKQml", 1, 0, "FrameBuffer");
 
 FrameBufferRenderer::FrameBufferRenderer(vtkInternalOpenGLRenderWindow* rw, FrameBufferItem* item) :
     m_vtkRenderWindow(rw),

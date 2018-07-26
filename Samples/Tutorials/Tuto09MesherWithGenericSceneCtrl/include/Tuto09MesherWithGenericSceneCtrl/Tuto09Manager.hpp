@@ -46,8 +46,7 @@ public Q_SLOTS:
     void onSnap(QUrl url);
     void applyMesher(unsigned int reduction);
     void onShowScan(bool isShown);
-    void onUpdateSliceMode(int mode);
-    void onUpdatedSliceIndex(int index, int value);
+    void onImageSliceSelectorCreated(QString uid);
 
 Q_SIGNALS:
 
