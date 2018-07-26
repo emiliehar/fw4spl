@@ -2,6 +2,7 @@
 
     <requirement id="dataReg" />
     <requirement id="servicesReg" />
+    <requirement id="uiImageQml" />
 
     <library name="Tuto09MesherWithGenericSceneCtrl" />
 

@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
 import fw4spl.tuto.Tuto09Manager 1.0
 import fw4spl.fwVTKQml 1.0
+import uiImageQml 1.0
 
 ApplicationWindow {
     id: root
@@ -12,12 +13,15 @@ ApplicationWindow {
     height: 600
     visible: true
 
+    onClosing: tuto09.uninitialize();
+
     Tuto09Manager {
         id: tuto09
         frameBuffer: scene3D
 
         onImageLoaded: {
             sliceEditor.visible=true
+            sliceSelector.visible=true
             displayScanButton.visible = true
             saveMesh.enabled = true
             actionMesh50.enabled = true
@@ -85,7 +89,7 @@ ApplicationWindow {
         }
 
         RowLayout {
-            Layout.fillWidth: true
+            Layout.fillHeight: true
             Layout.minimumWidth: parent.width
             Layout.maximumHeight: 50
             spacing: 4
@@ -97,18 +101,17 @@ ApplicationWindow {
                 color: "transparent"
                 ComboBox {
                     id: sliceEditor
+                    anchors.fill: parent
                     anchors.left: parent.left
-                    anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 4
                     visible: false
-
 
                     model: ["One slice", "Three slice"]
 
                     currentIndex: 1
                     onActivated: {
-                        imageAdaptor.updateSliceMode((index == 0) ? 1 : 3)
+                        tuto09.onUpdateSliceMode((index == 0) ? 1 : 3)
                     }
                 }
             }
@@ -122,15 +125,30 @@ ApplicationWindow {
                     id: displayScanButton
                     visible: false
                     checkable: true
-                    checked: false
+                    checked: true
+                    anchors.fill: parent
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: "Scan"
                     onCheckedChanged: {
-                        sliceSelector.enabled = !checked && imageAdaptor.image
+                        sliceEditor.enabled = checked
+                        tuto09.onShowScan(checked)
                     }
+                }
+            }
+
+            SliceSelector {
+                id: sliceSelector
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                visible: false
+                from: 0
+                to: 80
+
+                onUpdatedSliceIndex: {
+                    tuto09.onUpdatedSliceIndex(index, value)
                 }
             }
 
@@ -144,11 +162,30 @@ ApplicationWindow {
                     text: "Snap"
                     anchors.fill: parent
                     anchors.rightMargin: 4
+                    anchors.left: parent.left
                     onClicked: {
-                        snapshotEditor.onSnapButton()
+                        snapFileDialog.open()
                     }
                 }
             }
+        }
+    }
+
+    FileDialog {
+        id: snapFileDialog
+        title: "Save snapshot as"
+        folder: shortcuts.home
+        selectExisting: false
+        nameFilters: [
+            "Image file (*.jpg *.jpeg *.bmp *.png *.tiff)",
+            "jpeg (*.jpg *.jpeg)",
+            "bmp (*.bmp)",
+            "png (*.png)",
+            "tiff (*.tiff)",
+            "all (*.*)"
+        ]
+        onAccepted: {
+            tuto09.onSnap(snapFileDialog.fileUrl)
         }
     }
 }

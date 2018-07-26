@@ -14,10 +14,10 @@
 
 #include "Tuto09MesherWithGenericSceneCtrl/Tuto09Manager.hpp"
 
+#include <fwQml/QmlEngine.hpp>
+
 #include <fwRuntime/operations.hpp>
 #include <fwRuntime/utils/GenericExecutableFactoryRegistrar.hpp>
-
-#include <fwVTKQml/FrameBufferItem.hpp>
 
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -52,18 +52,11 @@ void Plugin::start()
 
 void Plugin::initialize()
 {
-    m_engine = new QQmlApplicationEngine();
+    SPTR(::fwQml::QmlEngine) engine = ::fwQml::QmlEngine::getDefault();
 
     auto path = ::fwRuntime::getBundleResourceFilePath("Tuto09MesherWithGenericSceneCtrl-0.1/ui.qml");
 
-    QQmlComponent component(m_engine);
-
-    component.loadUrl(QUrl::fromLocalFile(QString::fromStdString(path.string())));
-    SLM_ASSERT(qPrintable(component.errorString()), component.isReady());
-
-    QObject* topLevel        = component.create();
-    QQuickWindow* rootWindow = qobject_cast<QQuickWindow*>(topLevel);
-    rootWindow->show();
+    engine->loadMainComponent(path);
 }
 
 //------------------------------------------------------------------------------

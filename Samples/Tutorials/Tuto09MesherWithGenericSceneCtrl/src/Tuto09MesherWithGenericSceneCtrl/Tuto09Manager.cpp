@@ -12,10 +12,13 @@
 #include <fwCore/spyLog.hpp>
 
 #include <fwData/Image.hpp>
+#include <fwData/Integer.hpp>
 #include <fwData/Reconstruction.hpp>
 
+#include <fwDataTools/fieldHelper/Image.hpp>
 #include <fwDataTools/fieldHelper/MedicalImageHelpers.hpp>
 #include <fwDataTools/helper/Image.hpp>
+#include <fwDataTools/helper/MedicalImageAdaptor.hpp>
 
 #include <fwMedData/ImageSeries.hpp>
 #include <fwMedData/ModelSeries.hpp>
@@ -48,7 +51,6 @@ Tuto09Manager::Tuto09Manager() noexcept :
 
 Tuto09Manager::~Tuto09Manager() noexcept
 {
-    this->uninitialize();
     delete m_frameBuffer;
 }
 
@@ -62,7 +64,7 @@ void Tuto09Manager::initialize()
         auto renderSrv = ::fwServices::add< ::fwRenderVTK::SRender >("::fwRenderVTK::SRender");
         m_imageAdaptor       = ::fwServices::add("::visuVTKAdaptor::SNegatoMPR");
         m_modelSeriesAdaptor = ::fwServices::add("::visuVTKAdaptor::SModelSeries");
-        auto snapshotAdaptor = ::fwServices::add("::visuVTKAdaptor::SSnapshot");
+        m_snapshotAdaptor    = ::fwServices::add("::visuVTKAdaptor::SSnapshot");
 
         /* **************************************************************************************
         *              genericScene configuration
@@ -75,17 +77,11 @@ void Tuto09Manager::initialize()
         pickerConfig.add("<xmlattr>.id", "picker");
         renderConfig.add_child("scene.picker", pickerConfig);
         renderConfig.add("scene.renderer.<xmlattr>.id", "default");
-        ::fwServices::IService::ConfigType adpt1Config;
-        adpt1Config.put("<xmlattr>.uid", m_modelSeriesAdaptor->getID());
-        renderConfig.add_child("scene.adaptor", adpt1Config);
-        ::fwServices::IService::ConfigType adpt2Config;
-        adpt2Config.put("<xmlattr>.uid", m_imageAdaptor->getID());
-        renderConfig.add_child("scene.adaptor", adpt2Config);
-        ::fwServices::IService::ConfigType adpt3Config;
-        adpt3Config.put("<xmlattr>.uid", snapshotAdaptor->getID());
-        renderConfig.add_child("scene.adaptor", adpt3Config);
         renderSrv->setConfiguration(renderConfig);
         renderSrv->useContainer(false);
+        renderSrv->displayAdaptor(m_modelSeriesAdaptor->getID());
+        renderSrv->displayAdaptor(m_imageAdaptor->getID());
+        renderSrv->displayAdaptor(m_snapshotAdaptor->getID());
 
         auto interactorManager = ::fwRenderVTK::factory::New< ::fwVTKQml::VtkRenderWindowInteractorManager >();
         SLM_ASSERT("Frame Buffer is not yet defined", m_frameBuffer);
@@ -110,17 +106,17 @@ void Tuto09Manager::initialize()
 
         ::fwServices::IService::ConfigType snapshotAdaptorConfig;
         snapshotAdaptorConfig.add("config.<xmlattr>.renderer", "default");
-        snapshotAdaptor->setConfiguration(snapshotAdaptorConfig);
-        snapshotAdaptor->configure();
+        m_snapshotAdaptor->setConfiguration(snapshotAdaptorConfig);
+        m_snapshotAdaptor->configure();
 
         /* **************************************************************************************
         *              start the services
         ****************************************************************************************/
 
         renderSrv->start();
-        snapshotAdaptor->start();
+        m_snapshotAdaptor->start();
         m_startedService.emplace(renderSrv);
-        m_startedService.emplace(snapshotAdaptor);
+        m_startedService.emplace(m_snapshotAdaptor);
         m_isInitialized = true;
     }
 }
@@ -210,6 +206,52 @@ void Tuto09Manager::applyMesher(unsigned int reduction)
         this->registerObj(m_modelSeriesAdaptor, m_modelSeries, "model", ::fwServices::IService::AccessType::INPUT,
                           true);
     }
+}
+
+//------------------------------------------------------------------------------
+
+void Tuto09Manager::onSnap(QUrl url)
+{
+    m_snapshotAdaptor->slot("snap")->asyncRun(url.path().toStdString());
+}
+
+//------------------------------------------------------------------------------
+
+void Tuto09Manager::onShowScan(bool isShown)
+{
+    m_imageAdaptor->slot("showSlice")->asyncRun(isShown);
+}
+
+//------------------------------------------------------------------------------
+
+void Tuto09Manager::onUpdateSliceMode(int mode)
+{
+    m_imageAdaptor->slot("updateSliceMode")->asyncRun(mode);
+}
+
+//------------------------------------------------------------------------------
+
+void Tuto09Manager::onUpdatedSliceIndex(int index, int value)
+{
+    auto image       = m_loadedImageSeries->getImage();
+    auto axialIdx    = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_axialSliceIndexId);
+    auto frontalIdx  = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_frontalSliceIndexId);
+    auto sagittalIdx = image->getField< ::fwData::Integer >(::fwDataTools::fieldHelper::Image::m_sagittalSliceIndexId);
+    switch (index)
+    {
+        case ::fwDataTools::helper::MedicalImageAdaptor::X_AXIS:
+            sagittalIdx->value() = value;
+            break;
+        case ::fwDataTools::helper::MedicalImageAdaptor::Y_AXIS:
+            frontalIdx->value() = value;
+            break;
+        case ::fwDataTools::helper::MedicalImageAdaptor::Z_AXIS:
+            axialIdx->value() = value;
+            break;
+    }
+    auto sig = image->signal< ::fwData::Image::SliceIndexModifiedSignalType >(
+        ::fwData::Image::s_SLICE_INDEX_MODIFIED_SIG);
+    sig->asyncEmit(axialIdx->value(), frontalIdx->value(), sagittalIdx->value());
 }
 
 //------------------------------------------------------------------------------

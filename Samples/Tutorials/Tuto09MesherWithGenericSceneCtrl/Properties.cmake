@@ -22,10 +22,7 @@ set( REQUIREMENTS
     servicesReg
     opVTKMesh
     uiIO
-    uiImageQt
-    uiMedDataQt
-    uiReconstructionQt
-    uiVisuQt
+    uiImageQml
     visuVTKAdaptor
     visuVTKQt
     fwlauncher
