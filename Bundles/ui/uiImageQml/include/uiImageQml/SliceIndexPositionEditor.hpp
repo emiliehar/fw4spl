@@ -10,11 +10,11 @@
 
 #include <fwDataTools/helper/MedicalImageAdaptor.hpp>
 
-#include <fwGui/editor/IEditor.hpp>
-
 #include <fwQml/IQmlEditor.hpp>
 
 #include <fwTools/Failed.hpp>
+
+#include <QObject>
 
 namespace uiImageQml
 {
@@ -51,8 +51,7 @@ Q_OBJECT
 Q_PROPERTY(int sliceIndex MEMBER m_sliceIndex)
 public:
 
-    fwCoreServiceClassDefinitionsMacro( (SliceIndexPositionEditor)(::fwGui::editor::IEditor) );
-    fwCoreAllowSharedFromThis();
+    fwCoreServiceClassDefinitionsMacro( (SliceIndexPositionEditor)(::fwQml::IQmlEditor) );
 
     /// Constructor. Do nothing.
     UIIMAGEQML_API SliceIndexPositionEditor() noexcept;

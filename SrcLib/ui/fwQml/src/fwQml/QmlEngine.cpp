@@ -38,21 +38,21 @@ SPTR(QmlEngine) QmlEngine::getDefault()
 
 //-----------------------------------------------------------------------------
 
-FWQML_API void QmlEngine::loadMainComponent(const ::boost::filesystem::path& file)
+void QmlEngine::loadMainComponent(const ::boost::filesystem::path& file)
 {
     m_engine->load(QUrl::fromLocalFile(QString::fromStdString(file.string())));
 }
 
 //-----------------------------------------------------------------------------
 
-FWQML_API void QmlEngine::loadModule(const ::boost::filesystem::path& path)
+void QmlEngine::loadModule(const ::boost::filesystem::path& path)
 {
     m_engine->addImportPath(QString::fromStdString(path.parent_path().string()));
 }
 
 //-----------------------------------------------------------------------------
 
-FWQML_API QList<QObject*> QmlEngine::getRootObjects()
+QList<QObject*> QmlEngine::getRootObjects()
 {
     return m_engine->rootObjects();
 }

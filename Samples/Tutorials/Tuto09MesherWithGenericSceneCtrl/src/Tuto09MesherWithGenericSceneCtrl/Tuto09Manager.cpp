@@ -23,6 +23,7 @@
 #include <fwMedData/ImageSeries.hpp>
 #include <fwMedData/ModelSeries.hpp>
 
+#include <fwQml/IQmlEditor.hpp>
 #include <fwQml/QmlRegistry.hpp>
 
 #include <fwRenderVTK/factory/new.hpp>
@@ -158,6 +159,10 @@ void Tuto09Manager::onOpenImage()
             helper.createImageSliceIndex();
 
             this->registerObj(m_imageAdaptor, image, "image",  ::fwServices::IService::AccessType::INOUT, true);
+            if (m_sliceIndexEditor)
+            {
+                this->registerObj(m_sliceIndexEditor, image, "image",  ::fwServices::IService::AccessType::INOUT, true);
+            }
             m_loadedImageSeries = imageSeries;
             Q_EMIT imageLoaded();
         }
@@ -210,7 +215,7 @@ void Tuto09Manager::applyMesher(unsigned int reduction)
 
 //------------------------------------------------------------------------------
 
-void Tuto09Manager::onSnap(QUrl url)
+void Tuto09Manager::onSnap(const QUrl& url)
 {
     m_snapshotAdaptor->slot("snap")->asyncRun(url.path().toStdString());
 }
@@ -224,13 +229,18 @@ void Tuto09Manager::onShowScan(bool isShown)
 
 //------------------------------------------------------------------------------
 
-void Tuto09Manager::onImageSliceSelectorCreated(QString uid)
+void Tuto09Manager::onServiceCreated(const QVariant& obj)
 {
-    const std::string uidStr = uid.toStdString();
-
-    auto obj = ::fwTools::fwID::getObject(uidStr);
-    auto srv = ::fwServices::IService::dynamicCast(obj);
-    SLM_ASSERT("service '" + uidStr + "' is not defined", srv);
+    ::fwQml::IQmlEditor::sptr srv(obj.value< ::fwQml::IQmlEditor* >());
+    if (srv)
+    {
+        if (srv->isA("::uiImageQml::SliceIndexPositionEditor") && m_loadedImageSeries)
+        {
+            this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
+                              ::fwServices::IService::AccessType::INOUT, true);
+        }
+    }
+    m_sliceIndexEditor = srv;
 }
 
 //------------------------------------------------------------------------------

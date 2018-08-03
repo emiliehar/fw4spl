@@ -43,10 +43,10 @@ public Q_SLOTS:
     void uninitialize();
     void onOpenImage();
     void onSaveMesh();
-    void onSnap(QUrl url);
+    void onSnap(const QUrl& url);
     void applyMesher(unsigned int reduction);
     void onShowScan(bool isShown);
-    void onImageSliceSelectorCreated(QString uid);
+    void onServiceCreated(const QVariant& obj);
 
 Q_SIGNALS:
 
@@ -54,7 +54,7 @@ Q_SIGNALS:
 
 private:
 
-    bool m_isInitialized{false};
+    bool m_isInitialized {false};
     ::fwVTKQml::FrameBufferItem* m_frameBuffer;
     ::fwMedData::ImageSeries::sptr m_loadedImageSeries;
     ::fwMedData::ModelSeries::sptr m_modelSeries;
@@ -62,6 +62,7 @@ private:
     ::fwServices::IService::sptr m_imageAdaptor;
     ::fwServices::IService::sptr m_modelSeriesAdaptor;
     ::fwServices::IService::sptr m_snapshotAdaptor;
+    ::fwServices::IService::sptr m_sliceIndexEditor;
 
 };
 

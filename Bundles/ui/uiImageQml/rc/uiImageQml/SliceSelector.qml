@@ -11,7 +11,7 @@ Item {
     property int to: 0
     property int sliceIndex: 2
 
-    signal serviceCreated(string uid)
+    signal serviceCreated(var srv)
 
     onVisibleChanged: {
         if (visible==true){
@@ -23,7 +23,7 @@ Item {
         id: sliceIndexEditor
 
         onCreated:{
-            sliceIndexSelector.serviceCreated(uid)
+            sliceIndexSelector.serviceCreated(sliceIndexEditor)
         }
 
         onSetSliceRange: {

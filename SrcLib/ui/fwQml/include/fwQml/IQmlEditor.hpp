@@ -28,30 +28,20 @@ public:
 
     fwCoreServiceClassDefinitionsMacro( (IQmlEditor)(::fwServices::IService) );
 
-Q_SIGNALS:
-    void created(QString uid);
-
-public Q_SLOTS:
-    //------------------------------------------------------------------------------
-
-    void initialize()
-    {
-        this->created(QString::fromStdString(this->getID()));
-    }
-
-protected:
-
     /**
      * @brief   Constructor. Do nothing (Just initialize parameters).
      */
-    IQmlEditor() noexcept
-    {
-    }
+    IQmlEditor() noexcept;
 
     /// Destructor. Do nothing.
-    virtual ~IQmlEditor() noexcept
-    {
-    }
+    virtual ~IQmlEditor() noexcept;
+
+Q_SIGNALS:
+    void created();
+
+public Q_SLOTS:
+
+    void initialize();
 
 };
 

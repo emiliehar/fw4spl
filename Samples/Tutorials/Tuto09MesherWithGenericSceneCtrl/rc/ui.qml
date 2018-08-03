@@ -148,7 +148,7 @@ ApplicationWindow {
                 to: 80
 
                 onServiceCreated: {
-                    tuto09.imageSliceSelectorCreated(uid)
+                    tuto09.onServiceCreated(srv)
                 }
             }
 
