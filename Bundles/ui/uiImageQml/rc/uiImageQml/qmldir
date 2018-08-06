@@ -1,2 +1,2 @@
-module uiImageQt
+module uiImageQml
 SliceSelector 1.0 SliceSelector.qml

@@ -4,7 +4,7 @@
  * published by the Free Software Foundation.
  * ****** END LICENSE BLOCK ****** */
 
-#include "uiImageQml/SliceIndexPositionEditor.hpp"
+#include "uiImageQml/SSliceIndexPositionEditor.hpp"
 
 #include <fwCom/Signal.hpp>
 #include <fwCom/Signal.hxx>
@@ -37,9 +37,9 @@
 namespace uiImageQml
 {
 
-static ::fwQml::QmlRegistry<SliceIndexPositionEditor> registrar("uiImageQml", 1, 0, "SliceIndexPositionEditor");
+static ::fwQml::QmlRegistry<SSliceIndexPositionEditor> registrar("uiImageQml", 1, 0, "SSliceIndexPositionEditor");
 
-const std::string* SliceIndexPositionEditor::SLICE_INDEX_FIELDID[ 3 ] =
+const std::string* SSliceIndexPositionEditor::SLICE_INDEX_FIELDID[ 3 ] =
 {
     &fwDataTools::fieldHelper::Image::m_sagittalSliceIndexId,
     &fwDataTools::fieldHelper::Image::m_frontalSliceIndexId,
@@ -53,21 +53,21 @@ static const ::fwServices::IService::KeyType s_IMAGE_INOUT = "image";
 
 //------------------------------------------------------------------------------
 
-SliceIndexPositionEditor::SliceIndexPositionEditor() noexcept
+SSliceIndexPositionEditor::SSliceIndexPositionEditor() noexcept
 {
-    newSlot(s_UPDATE_SLICE_INDEX_SLOT, &SliceIndexPositionEditor::updateSliceIndex, this);
-    newSlot(s_UPDATE_SLICE_TYPE_SLOT, &SliceIndexPositionEditor::updateSliceType, this);
+    newSlot(s_UPDATE_SLICE_INDEX_SLOT, &SSliceIndexPositionEditor::updateSliceIndex, this);
+    newSlot(s_UPDATE_SLICE_TYPE_SLOT, &SSliceIndexPositionEditor::updateSliceType, this);
 }
 
 //------------------------------------------------------------------------------
 
-SliceIndexPositionEditor::~SliceIndexPositionEditor() noexcept
+SSliceIndexPositionEditor::~SSliceIndexPositionEditor() noexcept
 {
 }
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::starting()
+void SSliceIndexPositionEditor::starting()
 {
     ::fwData::Image::sptr image = this->getInOut< ::fwData::Image >(s_IMAGE_INOUT);
 
@@ -79,14 +79,14 @@ void SliceIndexPositionEditor::starting()
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::stopping()
+void SSliceIndexPositionEditor::stopping()
 {
 
 }
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::configuring()
+void SSliceIndexPositionEditor::configuring()
 {
     if( this->m_configuration->size() > 0 )
     {
@@ -118,7 +118,7 @@ void SliceIndexPositionEditor::configuring()
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::updating()
+void SSliceIndexPositionEditor::updating()
 {
     ::fwData::Image::sptr image = this->getInOut< ::fwData::Image >(s_IMAGE_INOUT);
 
@@ -128,7 +128,7 @@ void SliceIndexPositionEditor::updating()
 
 //-----------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::updateSliceIndex(int axial, int frontal, int sagittal)
+void SSliceIndexPositionEditor::updateSliceIndex(int axial, int frontal, int sagittal)
 {
     m_axialIndex->value()    = axial;
     m_frontalIndex->value()  = frontal;
@@ -144,7 +144,7 @@ void SliceIndexPositionEditor::updateSliceIndex(int axial, int frontal, int sagi
 
 //-----------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::updateSliceType(int from, int to)
+void SSliceIndexPositionEditor::updateSliceType(int from, int to)
 {
     if( to == static_cast< int > ( m_orientation ) )
     {
@@ -159,13 +159,13 @@ void SliceIndexPositionEditor::updateSliceType(int from, int to)
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::info( std::ostream& _sstream )
+void SSliceIndexPositionEditor::info( std::ostream& _sstream )
 {
 }
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::updateSliceIndexFromImg()
+void SSliceIndexPositionEditor::updateSliceIndexFromImg()
 {
     ::fwData::Image::sptr image = this->getInOut< ::fwData::Image >(s_IMAGE_INOUT);
 
@@ -189,7 +189,7 @@ void SliceIndexPositionEditor::updateSliceIndexFromImg()
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::updateSliceTypeFromImg(Orientation type )
+void SSliceIndexPositionEditor::updateSliceTypeFromImg(Orientation type )
 {
     // Update Type Choice
     this->setSliceType(static_cast< int >( type ));
@@ -201,7 +201,7 @@ void SliceIndexPositionEditor::updateSliceTypeFromImg(Orientation type )
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::onSliceIndex(int index)
+void SSliceIndexPositionEditor::onSliceIndex(int index)
 {
     ::fwData::Image::sptr image = this->getInOut< ::fwData::Image >(s_IMAGE_INOUT);
 
@@ -217,7 +217,7 @@ void SliceIndexPositionEditor::onSliceIndex(int index)
 
 //------------------------------------------------------------------------------
 
-void SliceIndexPositionEditor::onSliceType( int _type )
+void SSliceIndexPositionEditor::onSliceType( int _type )
 {
     Orientation type = static_cast< Orientation >( _type );
     OSLM_ASSERT("Bad slice type "<<type, type == X_AXIS ||
@@ -242,7 +242,7 @@ void SliceIndexPositionEditor::onSliceType( int _type )
 
 //------------------------------------------------------------------------------
 
-::fwServices::IService::KeyConnectionsType SliceIndexPositionEditor::getObjSrvConnections() const
+::fwServices::IService::KeyConnectionsType SSliceIndexPositionEditor::getObjSrvConnections() const
 {
     KeyConnectionsType connections;
     connections.push_back( std::make_pair( ::fwData::Image::s_MODIFIED_SIG, s_UPDATE_SLOT ) );
@@ -255,7 +255,7 @@ void SliceIndexPositionEditor::onSliceType( int _type )
 
 //------------------------------------------------------------------------------
 
-::fwServices::IService::KeyConnectionsMap SliceIndexPositionEditor::getAutoConnections() const
+::fwServices::IService::KeyConnectionsMap SSliceIndexPositionEditor::getAutoConnections() const
 {
     KeyConnectionsMap connections;
 

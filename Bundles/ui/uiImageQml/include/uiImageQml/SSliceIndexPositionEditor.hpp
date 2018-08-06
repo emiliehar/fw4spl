@@ -20,7 +20,7 @@ namespace uiImageQml
 {
 
 /**
- * @brief   SliceIndexPositionEditor service allows to change the slice index of an image.
+ * @brief   SSliceIndexPositionEditor service allows to change the slice index of an image.
  *
  * This is represented by
  *  - a slider to select the slice index
@@ -33,7 +33,7 @@ namespace uiImageQml
  * @section XML XML Configuration
  *
  * @code{.xml}
-   <service uid="..." type="::uiImageQml::SliceIndexPositionEditor" autoConnect="yes">
+   <service uid="..." type="::uiImageQml::SSliceIndexPositionEditor" autoConnect="yes">
       <inout key="image" uid="..."/>
       <sliceIndex>${orientationValue}</sliceIndex>
    </service>
@@ -44,20 +44,20 @@ namespace uiImageQml
  * @subsection Configuration Configuration
  * - \b sliceIndex : Axis on which the index will be changed, must be "axial", "frontal" or "sagittal".
  */
-class UIIMAGEQML_CLASS_API SliceIndexPositionEditor : public ::fwQml::IQmlEditor,
+class UIIMAGEQML_CLASS_API SSliceIndexPositionEditor : public ::fwQml::IQmlEditor,
                                                       public ::fwDataTools::helper::MedicalImageAdaptor
 {
 Q_OBJECT
 Q_PROPERTY(int sliceIndex MEMBER m_sliceIndex)
 public:
 
-    fwCoreServiceClassDefinitionsMacro( (SliceIndexPositionEditor)(::fwQml::IQmlEditor) );
+    fwCoreServiceClassDefinitionsMacro( (SSliceIndexPositionEditor)(::fwQml::IQmlEditor) );
 
     /// Constructor. Do nothing.
-    UIIMAGEQML_API SliceIndexPositionEditor() noexcept;
+    UIIMAGEQML_API SSliceIndexPositionEditor() noexcept;
 
     /// Destructor. Do nothing.
-    UIIMAGEQML_API virtual ~SliceIndexPositionEditor() noexcept;
+    UIIMAGEQML_API virtual ~SSliceIndexPositionEditor() noexcept;
 
     /**
      * @brief Returns proposals to connect service slots to associated object signals,

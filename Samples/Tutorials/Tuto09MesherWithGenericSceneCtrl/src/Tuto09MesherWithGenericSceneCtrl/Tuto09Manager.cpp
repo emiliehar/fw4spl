@@ -237,7 +237,7 @@ void Tuto09Manager::onServiceCreated(const QVariant& obj)
     ::fwQml::IQmlEditor::sptr srv(obj.value< ::fwQml::IQmlEditor* >());
     if (srv)
     {
-        if (srv->isA("::uiImageQml::SliceIndexPositionEditor") && m_loadedImageSeries)
+        if (srv->isA("::uiImageQml::SSliceIndexPositionEditor") && m_loadedImageSeries)
         {
             this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
                               ::fwServices::IService::AccessType::INOUT, true, true);

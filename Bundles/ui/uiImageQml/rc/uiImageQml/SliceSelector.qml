@@ -19,7 +19,7 @@ Item {
         }
     }
 
-    SliceIndexPositionEditor {
+    SSliceIndexPositionEditor {
         id: sliceIndexEditor
 
         onCreated:{

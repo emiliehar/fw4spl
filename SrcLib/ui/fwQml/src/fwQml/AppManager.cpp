@@ -36,6 +36,11 @@ void AppManager::registerService(const ::fwServices::IService::sptr& srv)
 
 void AppManager::startService(const ::fwServices::IService::sptr& srv)
 {
+    if (srv->isStarted())
+    {
+        SLM_ERROR("Service '" + srv->getID() + "' is already started.");
+        return;
+    }
     srv->start();
     m_startedService.emplace_back(srv);
 }

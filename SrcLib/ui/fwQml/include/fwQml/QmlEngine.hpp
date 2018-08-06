@@ -32,7 +32,7 @@ public:
 
     FWQML_API void loadMainComponent(const ::boost::filesystem::path& file);
 
-    FWQML_API void loadModule(const ::boost::filesystem::path& path);
+    FWQML_API void importModulePath(const ::boost::filesystem::path& path);
 
     FWQML_API QList<QObject*> getRootObjects();
 

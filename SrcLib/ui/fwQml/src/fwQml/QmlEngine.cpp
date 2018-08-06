@@ -45,9 +45,9 @@ void QmlEngine::loadMainComponent(const ::boost::filesystem::path& file)
 
 //-----------------------------------------------------------------------------
 
-void QmlEngine::loadModule(const ::boost::filesystem::path& path)
+void QmlEngine::importModulePath(const ::boost::filesystem::path& path)
 {
-    m_engine->addImportPath(QString::fromStdString(path.parent_path().string()));
+    m_engine->addImportPath(QString::fromStdString(path.string()));
 }
 
 //-----------------------------------------------------------------------------
