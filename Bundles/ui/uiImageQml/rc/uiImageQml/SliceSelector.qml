@@ -13,18 +13,12 @@ Item {
 
     signal serviceCreated(var srv)
 
-    onVisibleChanged: {
-        if (visible==true){
-            sliceIndexEditor.initialize()
-        }
+    Component.onCompleted: {
+            serviceCreated(sliceIndexEditor)
     }
 
     SSliceIndexPositionEditor {
         id: sliceIndexEditor
-
-        onCreated:{
-            sliceIndexSelector.serviceCreated(sliceIndexEditor)
-        }
 
         onSetSliceRange: {
             from = min
@@ -36,7 +30,7 @@ Item {
         }
 
         onSetSliceType: {
-            sliceType.currentIndex = index
+            sliceType.currentIndex = type
         }
     }
 

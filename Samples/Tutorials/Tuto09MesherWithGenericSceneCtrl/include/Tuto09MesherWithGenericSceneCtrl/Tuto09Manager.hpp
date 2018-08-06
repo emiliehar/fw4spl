@@ -45,6 +45,7 @@ public Q_SLOTS:
     void onSaveMesh();
     void onSnap(const QUrl& url);
     void applyMesher(unsigned int reduction);
+    void onUpdateSliceMode(int mode);
     void onShowScan(bool isShown);
     void onServiceCreated(const QVariant& obj);
 

@@ -225,6 +225,14 @@ void Tuto09Manager::onSnap(const QUrl& url)
 
 //------------------------------------------------------------------------------
 
+void Tuto09Manager::onUpdateSliceMode(int mode)
+{
+    m_imageAdaptor->slot("updateSliceMode")->asyncRun(mode);
+}
+
+
+//------------------------------------------------------------------------------
+
 void Tuto09Manager::onShowScan(bool isShown)
 {
     m_imageAdaptor->slot("showSlice")->asyncRun(isShown);

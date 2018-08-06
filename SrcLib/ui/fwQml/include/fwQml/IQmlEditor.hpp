@@ -36,13 +36,6 @@ public:
     /// Destructor. Do nothing.
     virtual ~IQmlEditor() noexcept;
 
-Q_SIGNALS:
-    void created();
-
-public Q_SLOTS:
-
-    void initialize();
-
 };
 
 } // namespace fwQml
