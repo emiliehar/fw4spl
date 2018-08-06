@@ -28,14 +28,23 @@ public:
 
 protected:
 
+    /// Register the service to be able to unregister it
+    void registerService(const ::fwServices::IService::sptr& srv);
+
+    /// Start the service and register it in the started service container
+    void startService(const ::fwServices::IService::sptr& srv);
+
+    /// Stop all the started service and unregister all the created service
     void stopAndUnregisterServices();
 
     /// Register the object to the service, and eventually unregister the previous object and start it
     void registerObj(const ::fwServices::IService::sptr& srv, const ::fwData::Object::sptr& obj,
                      const ::fwServices::IService::KeyType& key, const ::fwServices::IService::AccessType access,
-                     bool autoConnect = false, bool optional = false);
+                     bool autoStart = false, bool autoConnect = false, bool optional = false);
 
-    std::set< ::fwServices::IService::sptr > m_startedService;
+private:
+    std::vector< ::fwServices::IService::sptr > m_startedService;
+    std::vector< ::fwServices::IService::sptr > m_createdService;
     std::set< ::fwData::Object::sptr > m_registeredObject;
 
     std::vector< ::fwCom::SlotBase::sptr > m_slots;

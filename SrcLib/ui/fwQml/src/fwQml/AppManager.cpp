@@ -27,6 +27,21 @@ AppManager::~AppManager()
 
 //------------------------------------------------------------------------------
 
+void AppManager::registerService(const ::fwServices::IService::sptr& srv)
+{
+    m_createdService.emplace_back(srv);
+}
+
+//------------------------------------------------------------------------------
+
+void AppManager::startService(const ::fwServices::IService::sptr& srv)
+{
+    srv->start();
+    m_startedService.emplace_back(srv);
+}
+
+//------------------------------------------------------------------------------
+
 void AppManager::stopAndUnregisterServices()
 {
     std::vector< ::fwServices::IService::SharedFutureType > futures;
@@ -39,12 +54,12 @@ void AppManager::stopAndUnregisterServices()
     std::for_each(futures.begin(), futures.end(), std::mem_fn(&::std::shared_future<void>::wait));
 
     // unregister the services
-    auto services = ::fwServices::OSR::getServices("::fwServices::IService");
-    for(auto& srv : services)
+    for(auto& srv : m_createdService)
     {
         ::fwServices::OSR::unregisterService(srv);
     }
     m_startedService.clear();
+    m_createdService.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -52,9 +67,11 @@ void AppManager::stopAndUnregisterServices()
 void AppManager::registerObj(const ::fwServices::IService::sptr& srv, const ::fwData::Object::sptr& obj,
                              const ::fwServices::IService::KeyType& key,
                              const ::fwServices::IService::AccessType access,
-                             bool autoConnect, bool optional)
+                             bool autoStart, bool autoConnect, bool optional)
 {
-    if (srv->isStarted())
+    bool isStarted = srv->isStarted();
+
+    if (isStarted && !optional)
     {
         srv->stop();
     }
@@ -63,9 +80,20 @@ void AppManager::registerObj(const ::fwServices::IService::sptr& srv, const ::fw
         srv->unregisterObject(key, access);
     }
     srv->registerObject(obj, key, access, autoConnect, optional);
-    srv->start();
-    m_startedService.emplace(srv);
+    if (optional)
+    {
+        srv->swapKey(key, obj);
+    }
+    else if (isStarted)
+    {
+        srv->start();
+    }
+    else if (autoStart) // TODO check if it has all the required inputs
+    {
+        this->startService(srv);
+    }
+
     m_registeredObject.emplace(obj);
 }
 
-}
+} // namespace fwQml

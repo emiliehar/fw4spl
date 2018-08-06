@@ -66,6 +66,10 @@ void Tuto09Manager::initialize()
         m_imageAdaptor       = ::fwServices::add("::visuVTKAdaptor::SNegatoMPR");
         m_modelSeriesAdaptor = ::fwServices::add("::visuVTKAdaptor::SModelSeries");
         m_snapshotAdaptor    = ::fwServices::add("::visuVTKAdaptor::SSnapshot");
+        this->registerService(renderSrv);
+        this->registerService(m_imageAdaptor);
+        this->registerService(m_modelSeriesAdaptor);
+        this->registerService(m_snapshotAdaptor);
 
         /* **************************************************************************************
         *              genericScene configuration
@@ -114,10 +118,8 @@ void Tuto09Manager::initialize()
         *              start the services
         ****************************************************************************************/
 
-        renderSrv->start();
-        m_snapshotAdaptor->start();
-        m_startedService.emplace(renderSrv);
-        m_startedService.emplace(m_snapshotAdaptor);
+        this->startService(renderSrv);
+        this->startService(m_snapshotAdaptor);
         m_isInitialized = true;
     }
 }
@@ -158,10 +160,11 @@ void Tuto09Manager::onOpenImage()
             helper.createTransferFunctionPool();
             helper.createImageSliceIndex();
 
-            this->registerObj(m_imageAdaptor, image, "image",  ::fwServices::IService::AccessType::INOUT, true);
+            this->registerObj(m_imageAdaptor, image, "image",  ::fwServices::IService::AccessType::INOUT, true, true);
             if (m_sliceIndexEditor)
             {
-                this->registerObj(m_sliceIndexEditor, image, "image",  ::fwServices::IService::AccessType::INOUT, true);
+                this->registerObj(m_sliceIndexEditor, image, "image",  ::fwServices::IService::AccessType::INOUT, true,
+                                  true);
             }
             m_loadedImageSeries = imageSeries;
             Q_EMIT imageLoaded();
@@ -209,7 +212,7 @@ void Tuto09Manager::applyMesher(unsigned int reduction)
 
         SLM_ASSERT("modelSeries is not created", m_modelSeries);
         this->registerObj(m_modelSeriesAdaptor, m_modelSeries, "model", ::fwServices::IService::AccessType::INPUT,
-                          true);
+                          true, true);
     }
 }
 
@@ -237,7 +240,7 @@ void Tuto09Manager::onServiceCreated(const QVariant& obj)
         if (srv->isA("::uiImageQml::SliceIndexPositionEditor") && m_loadedImageSeries)
         {
             this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
-                              ::fwServices::IService::AccessType::INOUT, true);
+                              ::fwServices::IService::AccessType::INOUT, true, true);
         }
     }
     m_sliceIndexEditor = srv;
