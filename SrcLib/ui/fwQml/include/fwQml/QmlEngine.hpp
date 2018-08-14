@@ -15,6 +15,7 @@
 #include <QList>
 #include <QPointer>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 namespace fwQml
 {
@@ -35,6 +36,8 @@ public:
     FWQML_API void importModulePath(const ::boost::filesystem::path& path);
 
     FWQML_API QList<QObject*> getRootObjects();
+
+    FWQML_API QQmlContext* getRootContext();
 
 private:
     static SPTR(QmlEngine) s_current;

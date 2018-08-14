@@ -64,6 +64,7 @@ private:
     ::fwServices::IService::sptr m_modelSeriesAdaptor;
     ::fwServices::IService::sptr m_snapshotAdaptor;
     ::fwServices::IService::sptr m_sliceIndexEditor;
+    ::fwServices::IService::sptr m_modelSeriesListEditor;
 
 };
 

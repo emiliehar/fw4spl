@@ -23,6 +23,7 @@ set( REQUIREMENTS
     opVTKMesh
     uiIO
     uiImageQml
+    uiMedDataQml
     visuVTKAdaptor
     visuVTKQt
     fwlauncher

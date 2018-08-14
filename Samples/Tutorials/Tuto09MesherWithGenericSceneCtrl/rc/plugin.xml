@@ -3,6 +3,7 @@
     <requirement id="dataReg" />
     <requirement id="servicesReg" />
     <requirement id="uiImageQml" />
+    <requirement id="uiMedDataQml" />
 
     <library name="Tuto09MesherWithGenericSceneCtrl" />
 

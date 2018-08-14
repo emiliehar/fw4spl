@@ -58,5 +58,11 @@ QList<QObject*> QmlEngine::getRootObjects()
 }
 
 //-----------------------------------------------------------------------------
+QQmlContext* QmlEngine::getRootContext()
+{
+    return m_engine->rootContext();
+}
+
+//-----------------------------------------------------------------------------
 
 }

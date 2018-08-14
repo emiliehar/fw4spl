@@ -213,6 +213,12 @@ void Tuto09Manager::applyMesher(unsigned int reduction)
         SLM_ASSERT("modelSeries is not created", m_modelSeries);
         this->registerObj(m_modelSeriesAdaptor, m_modelSeries, "model", ::fwServices::IService::AccessType::INPUT,
                           true, true);
+
+        if (m_modelSeriesListEditor)
+        {
+            this->registerObj(m_modelSeriesListEditor, m_modelSeries, "modelSeries",
+                              ::fwServices::IService::AccessType::INOUT, true, true);
+        }
     }
 }
 
@@ -229,7 +235,6 @@ void Tuto09Manager::onUpdateSliceMode(int mode)
 {
     m_imageAdaptor->slot("updateSliceMode")->asyncRun(mode);
 }
-
 
 //------------------------------------------------------------------------------
 
@@ -249,9 +254,15 @@ void Tuto09Manager::onServiceCreated(const QVariant& obj)
         {
             this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
                               ::fwServices::IService::AccessType::INOUT, true, true);
+            m_sliceIndexEditor = srv;
+        }
+        else if (srv->isA("::uiMedDataQml::SModelSeriesList") && m_modelSeries)
+        {
+            this->registerObj(srv, m_modelSeries, "modelSeries",
+                              ::fwServices::IService::AccessType::INOUT, true, true);
+            m_modelSeriesListEditor = srv;
         }
     }
-    m_sliceIndexEditor = srv;
 }
 
 //------------------------------------------------------------------------------
