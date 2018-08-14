@@ -45,7 +45,7 @@ namespace uiImageQml
  * - \b sliceIndex : Axis on which the index will be changed, must be "axial", "frontal" or "sagittal".
  */
 class UIIMAGEQML_CLASS_API SSliceIndexPositionEditor : public ::fwQml::IQmlEditor,
-                                                      public ::fwDataTools::helper::MedicalImageAdaptor
+                                                       public ::fwDataTools::helper::MedicalImageAdaptor
 {
 Q_OBJECT
 Q_PROPERTY(int sliceIndex MEMBER m_sliceIndex)
@@ -58,17 +58,6 @@ public:
 
     /// Destructor. Do nothing.
     UIIMAGEQML_API virtual ~SSliceIndexPositionEditor() noexcept;
-
-    /**
-     * @brief Returns proposals to connect service slots to associated object signals,
-     * this method is used for obj/srv auto connection
-     *
-     * Connect Image::s_MODIFIED_SIG to this::s_UPDATE_SLOT
-     * Connect Image::s_SLICE_INDEX_MODIFIED_SIG to this::s_UPDATE_SLICE_INDEX_SLOT
-     * Connect Image::s_SLICE_TYPE_MODIFIED_SIG to this::s_UPDATE_SLICE_TYPE_SLOT
-     * Connect Image::s_BUFFER_MODIFIED_SIG to this::s_UPDATE_BUFFER_SLOT
-     */
-    UIIMAGEQML_API virtual KeyConnectionsType getObjSrvConnections() const override;
 
 Q_SIGNALS:
     void setSliceRange(int min, int max);

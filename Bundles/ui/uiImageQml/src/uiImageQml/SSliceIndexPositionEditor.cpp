@@ -242,19 +242,6 @@ void SSliceIndexPositionEditor::onSliceType( int _type )
 
 //------------------------------------------------------------------------------
 
-::fwServices::IService::KeyConnectionsType SSliceIndexPositionEditor::getObjSrvConnections() const
-{
-    KeyConnectionsType connections;
-    connections.push_back( std::make_pair( ::fwData::Image::s_MODIFIED_SIG, s_UPDATE_SLOT ) );
-    connections.push_back( std::make_pair( ::fwData::Image::s_SLICE_INDEX_MODIFIED_SIG, s_UPDATE_SLICE_INDEX_SLOT ) );
-    connections.push_back( std::make_pair( ::fwData::Image::s_SLICE_TYPE_MODIFIED_SIG, s_UPDATE_SLICE_TYPE_SLOT ) );
-    connections.push_back( std::make_pair( ::fwData::Image::s_BUFFER_MODIFIED_SIG, s_UPDATE_SLOT ) );
-
-    return connections;
-}
-
-//------------------------------------------------------------------------------
-
 ::fwServices::IService::KeyConnectionsMap SSliceIndexPositionEditor::getAutoConnections() const
 {
     KeyConnectionsMap connections;
