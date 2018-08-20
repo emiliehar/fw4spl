@@ -28,15 +28,12 @@ namespace uiMedDataQml
 {
 
 const ::fwCom::Signals::SignalKeyType SModelSeriesList::s_RECONSTRUCTION_SELECTED_SIG = "reconstructionSelected";
-const ::fwCom::Signals::SignalKeyType SModelSeriesList::s_EMPTIED_SELECTION_SIG       = "emptiedSelection";
-const ::fwCom::Slots::SlotKeyType SModelSeriesList::s_SHOW_RECONSTRUCTIONS_SLOT       = "showReconstructions";
 
 const ::fwServices::IService::KeyType s_MODEL_SERIES_INOUT = "modelSeries";
 
 static ::fwQml::QmlRegistry<SModelSeriesList> registrar("uiMedDataQml", 1, 0, "SModelSeriesList");
 
 SModelSeriesList::SModelSeriesList() noexcept :
-    m_enableHideAll(true),
     m_listModel(nullptr)
 {
     m_sigReconstructionSelected = newSignal< ReconstructionSelectedSignalType >( s_RECONSTRUCTION_SELECTED_SIG );
@@ -85,45 +82,21 @@ void SModelSeriesList::updating()
 
 //------------------------------------------------------------------------------
 
-//void SModelSeriesList::onCurrentItemChanged( QTreeWidgetItem* current, QTreeWidgetItem* )
-//{
-//    SLM_ASSERT( "Current selected item is null", current );
-//    std::string id = current->data(0, Qt::UserRole).toString().toStdString();
+void SModelSeriesList::onOrganSelected(int index)
+{
+    if (index >= 0)
+    {
+        ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
+        SLM_ASSERT("'" + s_MODEL_SERIES_INOUT+ "' must be defined as 'inout'", modelSeries);
 
-//    ::fwData::Reconstruction::sptr rec = ::fwData::Reconstruction::dynamicCast(::fwTools::fwID::getObject(id));
+        const auto& recs = modelSeries->getReconstructionDB();
 
-//    m_sigReconstructionSelected->asyncEmit(rec);
-//}
+        const auto& selectedRec = recs.at(static_cast<size_t>(index));
+        m_sigReconstructionSelected->asyncEmit(selectedRec);
+    }
+}
 
-////------------------------------------------------------------------------------
-
-//void SModelSeriesList::onCurrentItemChanged ( QTreeWidgetItem* current, int column )
-//{
-//    this->onOrganChoiceVisibility(current, column);
-//}
-
-////------------------------------------------------------------------------------
-
-//void SModelSeriesList::onOrganChoiceVisibility(QTreeWidgetItem* item, int )
-//{
-//    std::string id = item->data(0, Qt::UserRole).toString().toStdString();
-//    ::fwData::Reconstruction::sptr rec = ::fwData::Reconstruction::dynamicCast(::fwTools::fwID::getObject(id));
-//    SLM_ASSERT("rec not instanced", rec);
-
-//    const bool itemIsChecked = (item->checkState(0) == Qt::Checked);
-
-//    if (rec->getIsVisible() != itemIsChecked)
-//    {
-//        rec->setIsVisible(itemIsChecked);
-
-//        ::fwData::Reconstruction::VisibilityModifiedSignalType::sptr sig;
-//        sig = rec->signal< ::fwData::Reconstruction::VisibilityModifiedSignalType >(
-//            ::fwData::Reconstruction::s_VISIBILITY_MODIFIED_SIG);
-//        sig->asyncEmit(itemIsChecked);
-//    }
-//}
-
-////------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void SModelSeriesList::onShowReconstructions(int state )
 {
@@ -132,6 +105,30 @@ void SModelSeriesList::onShowReconstructions(int state )
     ::fwDataTools::helper::Field helper( modelSeries );
     helper.addOrSwap("ShowReconstructions", ::fwData::Boolean::New(state == Qt::Unchecked));
     helper.notify();
+}
+
+//------------------------------------------------------------------------------
+
+void SModelSeriesList::onOrganVisibilityChanged(int index, bool visible)
+{
+    if (index >= 0)
+    {
+        ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
+        SLM_ASSERT("'" + s_MODEL_SERIES_INOUT+ "' must be defined as 'inout'", modelSeries);
+
+        const auto& recs        = modelSeries->getReconstructionDB();
+        const auto& selectedRec = recs.at(static_cast<size_t>(index));
+
+        if (selectedRec->getIsVisible() != visible)
+        {
+            selectedRec->setIsVisible(visible);
+
+            ::fwData::Reconstruction::VisibilityModifiedSignalType::sptr sig;
+            sig = selectedRec->signal< ::fwData::Reconstruction::VisibilityModifiedSignalType >(
+                ::fwData::Reconstruction::s_VISIBILITY_MODIFIED_SIG);
+            sig->asyncEmit(visible);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -153,6 +150,7 @@ void SModelSeriesList::onCheckAllBoxes( bool checked )
             sig->asyncEmit(checked);
         }
     }
+    this->updating();
 }
 
 //------------------------------------------------------------------------------

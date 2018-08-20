@@ -22,7 +22,6 @@ namespace uiMedDataQml
  *
  *  @section Signals Signals
  * - \b reconstructionSelected(::fwData::Object::sptr): this signal emits the selected reconstruction
- * - \b emptiedSelection(): this signal is emitted when no reconstruction is selected
  *
  * @section XML XML Configuration
  *
@@ -77,36 +76,21 @@ protected:
 
     static const ::fwCom::Signals::SignalKeyType s_RECONSTRUCTION_SELECTED_SIG;
     typedef ::fwCom::Signal< void (::fwData::Object::sptr) > ReconstructionSelectedSignalType;
-    static const ::fwCom::Signals::SignalKeyType s_EMPTIED_SELECTION_SIG;
-    typedef ::fwCom::Signal< void () > EmptiedSelectionSignalType;
-    static const ::fwCom::Slots::SlotKeyType s_SHOW_RECONSTRUCTIONS_SLOT;
-    typedef ::fwCom::Slot< void (bool) > ShowReconstructionsSlotType;
 
 protected Q_SLOTS:
 
-//    /// Slot called when new current item is setted in m_organChoice
-//    void onCurrentItemChanged ( QTreeWidgetItem* current, QTreeWidgetItem* previous );
-
-//    void onCurrentItemChanged ( QTreeWidgetItem* current, int column );
+    void onOrganSelected(int index);
 
     void onShowReconstructions(int state);
 
-//    void onOrganChoiceVisibility(QTreeWidgetItem* item, int column);
+    void onOrganVisibilityChanged(int index, bool visible);
 
     void onCheckAllBoxes(bool checked);
 
 private:
 
-    bool m_enableHideAll;
-
     /// Signal emitted when a reconstruction is selected
     ReconstructionSelectedSignalType::sptr m_sigReconstructionSelected;
-
-    /// Signal emitted when we clean the list
-    EmptiedSelectionSignalType::sptr m_sigEmptiedSelection;
-
-    /// Slot to show (or hide) reconstructions
-    ShowReconstructionsSlotType::sptr m_slotShowReconstuctions;
 
     OrganListModel* m_listModel;
 };

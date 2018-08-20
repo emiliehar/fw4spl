@@ -87,65 +87,62 @@ Item {
             }
         }
 
-        ListView {
-            id: listView
-            Layout.fillWidth: true
+        Rectangle {
             Layout.fillHeight: true
-            focus: true
+            Layout.fillWidth: true
+            color: "transparent"
+            TableView {
+                id: listView
+                anchors.fill: parent
+                focus: true
 
-            highlight: Rectangle {
-                color: "lightsteelblue";
-                radius: 3
-            }
 
-            header: Component {
-                id: organHeader
-                Item{
-                    width: listView.width
-                    height: 30
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
-
-                    Row {
-                        spacing: 5
-                        Layout.fillWidth: true
-                        Text { text: "V"; width: 15 }
-                        Text { text: "Organ name"; width: 120; font.bold: true }
-                        Text { text: "StructureType"; width: 80; font.bold: true }
-                    }
-                }
-            }
-
-            delegate: Component {
-                id: organDelegate
-                Item{
-                    width: listView.width
-                    height: 30
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
-
-                    Row {
-                        spacing: 5
-                        Layout.fillWidth: true
-                        CheckBox { checked: organVisibility; width: 15 }
-                        Text { text: organName; width: 120 }
-                        Text { text: structureType; width: 80 }
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked:
-                        {
-                            listView.currentIndex = index
+                TableViewColumn {
+                    role: "organVisibility"
+                    title: ""
+                    width: 20
+                    delegate: Item{
+                        width: listView.width
+                        height: 30
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        CheckBox {
+                            checked: styleData.value
+                            width: 15
+                            onCheckedChanged: {
+                                modelSeriesList.onOrganVisibilityChanged(styleData.row, checked)
+                            }
                         }
                     }
                 }
-            }
 
-            model: OrganListModel {
-                id: organListModel
-            }
+                TableViewColumn {
+                    role: "organName"
+                    title: "Organ name"
+                    width: 120
+                    delegate: Item {
+                        width: listView.width
+                        height: 30
+                        Text { text: styleData.value }
+                    }
+                }
+                TableViewColumn {
+                    role: "structureType"
+                    title: "Structure type"
+                    width: 100
+                    delegate: Item{
+                        width: listView.width
+                        height: 30
+                        Text { text: styleData.value }
+                    }
+                }
 
-            onCurrentItemChanged: console.log("[OSLM_LOG] " + listView.currentIndex + ' selected')
+                model: OrganListModel {
+                    id: organListModel
+                }
+
+                onCurrentRowChanged: modelSeriesList.onOrganSelected(listView.currentRow)
+            }
         }
     }
 }
