@@ -250,16 +250,22 @@ void Tuto09Manager::onServiceCreated(const QVariant& obj)
     ::fwQml::IQmlEditor::sptr srv(obj.value< ::fwQml::IQmlEditor* >());
     if (srv)
     {
-        if (srv->isA("::uiImageQml::SSliceIndexPositionEditor") && m_loadedImageSeries)
+        if (srv->isA("::uiImageQml::SSliceIndexPositionEditor"))
         {
-            this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
-                              ::fwServices::IService::AccessType::INOUT, true, true);
+            if (m_loadedImageSeries)
+            {
+                this->registerObj(srv, m_loadedImageSeries->getImage(), "image",
+                                  ::fwServices::IService::AccessType::INOUT, true, true);
+            }
             m_sliceIndexEditor = srv;
         }
-        else if (srv->isA("::uiMedDataQml::SModelSeriesList") && m_modelSeries)
+        else if (srv->isA("::uiMedDataQml::SModelSeriesList"))
         {
-            this->registerObj(srv, m_modelSeries, "modelSeries",
-                              ::fwServices::IService::AccessType::INOUT, true, true);
+            if (m_modelSeries)
+            {
+                this->registerObj(srv, m_modelSeries, "modelSeries",
+                                  ::fwServices::IService::AccessType::INOUT, true, true);
+            }
             m_modelSeriesListEditor = srv;
         }
     }

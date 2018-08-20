@@ -24,9 +24,6 @@ namespace uiMedDataQml
  * - \b reconstructionSelected(::fwData::Object::sptr): this signal emits the selected reconstruction
  * - \b emptiedSelection(): this signal is emitted when no reconstruction is selected
  *
- * @section Slots Slots
- * - \b showReconstructions(bool): slot called to show or hide all the reconstructions
- *
  * @section XML XML Configuration
  *
  * @code{.xml}
@@ -78,20 +75,12 @@ protected:
      */
     virtual KeyConnectionsMap getAutoConnections() const override;
 
-    void updateReconstructions();
-
-    void fillTree();
-
     static const ::fwCom::Signals::SignalKeyType s_RECONSTRUCTION_SELECTED_SIG;
     typedef ::fwCom::Signal< void (::fwData::Object::sptr) > ReconstructionSelectedSignalType;
     static const ::fwCom::Signals::SignalKeyType s_EMPTIED_SELECTION_SIG;
     typedef ::fwCom::Signal< void () > EmptiedSelectionSignalType;
     static const ::fwCom::Slots::SlotKeyType s_SHOW_RECONSTRUCTIONS_SLOT;
     typedef ::fwCom::Slot< void (bool) > ShowReconstructionsSlotType;
-
-Q_SIGNALS:
-    void clearTree();
-    void addOrgan(QString str);
 
 protected Q_SLOTS:
 
@@ -104,17 +93,9 @@ protected Q_SLOTS:
 
 //    void onOrganChoiceVisibility(QTreeWidgetItem* item, int column);
 
-    void onCheckAllCheckBox();
-    void onUnCheckAllCheckBox();
+    void onCheckAllBoxes(bool checked);
 
 private:
-
-    /// SLOT: Show (or hide) reconstructions
-    void showReconstructions(bool show);
-
-    void refreshVisibility();
-
-    void onCheckAllBoxes(bool visible);
 
     bool m_enableHideAll;
 

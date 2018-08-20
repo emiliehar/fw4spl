@@ -36,12 +36,10 @@ const ::fwServices::IService::KeyType s_MODEL_SERIES_INOUT = "modelSeries";
 static ::fwQml::QmlRegistry<SModelSeriesList> registrar("uiMedDataQml", 1, 0, "SModelSeriesList");
 
 SModelSeriesList::SModelSeriesList() noexcept :
-    m_enableHideAll(true)
+    m_enableHideAll(true),
+    m_listModel(nullptr)
 {
     m_sigReconstructionSelected = newSignal< ReconstructionSelectedSignalType >( s_RECONSTRUCTION_SELECTED_SIG );
-    m_sigEmptiedSelection       = newSignal< EmptiedSelectionSignalType >( s_EMPTIED_SELECTION_SIG );
-
-    newSlot(s_SHOW_RECONSTRUCTIONS_SLOT, &SModelSeriesList::showReconstructions, this);
 }
 
 //------------------------------------------------------------------------------
@@ -55,14 +53,16 @@ SModelSeriesList::~SModelSeriesList() noexcept
 
 void SModelSeriesList::starting()
 {
-    this->updating();
+    ::fwQml::IQmlEditor::starting();
 }
 
 //------------------------------------------------------------------------------
 
 void SModelSeriesList::stopping()
 {
-    // TODO: clean the table view
+    m_listModel->updateModelSeries(nullptr);
+
+    ::fwQml::IQmlEditor::stopping();
 }
 
 //------------------------------------------------------------------------------
@@ -76,32 +76,11 @@ void SModelSeriesList::configuring()
 
 void SModelSeriesList::updating()
 {
-//    this->blockSignals(true);
-
-    this->updateReconstructions();
-    this->refreshVisibility();
-
-//    this->blockSignals(false);
-}
-
-//------------------------------------------------------------------------------
-
-void SModelSeriesList::updateReconstructions()
-{
-    this->fillTree();
-}
-
-//------------------------------------------------------------------------------
-
-void SModelSeriesList::fillTree()
-{
     ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
     SLM_ASSERT("inout 'modelSeries' is missing", modelSeries);
 
-    for (auto& rec : modelSeries->getReconstructionDB())
-    {
-        Q_EMIT this->addOrgan(QString("{}"));
-    }
+    SLM_ASSERT("list model is not defined.", m_listModel);
+    m_listModel->updateModelSeries(modelSeries);
 }
 
 //------------------------------------------------------------------------------
@@ -148,45 +127,32 @@ void SModelSeriesList::fillTree()
 
 void SModelSeriesList::onShowReconstructions(int state )
 {
-//    const bool visible = static_cast<bool>(state);
-
-//    m_checkAllButton->setEnabled(!visible);
-//    m_unCheckAllButton->setEnabled(!visible);
-//    m_tree->setEnabled(!visible);
-
-//    ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
-//    if (!modelSeries)
-//    {
-//        FW_DEPRECATED_KEY(s_MODEL_SERIES_INOUT, "inout", "18.0");
-//        modelSeries = this->getObject< ::fwMedData::ModelSeries >();
-//    }
-//    {
-//        ::fwDataTools::helper::Field helper( modelSeries );
-//        helper.addOrSwap("ShowReconstructions", ::fwData::Boolean::New(state == Qt::Unchecked));
-//    }
+    ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
+    SLM_ASSERT("'" + s_MODEL_SERIES_INOUT+ "' must be defined as 'inout'", modelSeries);
+    ::fwDataTools::helper::Field helper( modelSeries );
+    helper.addOrSwap("ShowReconstructions", ::fwData::Boolean::New(state == Qt::Unchecked));
+    helper.notify();
 }
 
-////------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-void SModelSeriesList::refreshVisibility()
+void SModelSeriesList::onCheckAllBoxes( bool checked )
 {
-//    for( int i = 0; i < m_tree->topLevelItemCount(); ++i )
-//    {
-//        QTreeWidgetItem* item = m_tree->topLevelItem( i );
-//        std::string id        = item->data(0, Qt::UserRole).toString().toStdString();
-//        ::fwData::Reconstruction::sptr rec = ::fwData::Reconstruction::dynamicCast(::fwTools::fwID::getObject(id));
-//        item->setCheckState(0, rec->getIsVisible() ? Qt::Checked : Qt::Unchecked );
-//    }
-}
+    ::fwMedData::ModelSeries::sptr modelSeries = this->getInOut< ::fwMedData::ModelSeries >(s_MODEL_SERIES_INOUT);
+    SLM_ASSERT("'" + s_MODEL_SERIES_INOUT+ "' must be defined as 'inout'", modelSeries);
 
-////------------------------------------------------------------------------------
+    for (const auto& rec : modelSeries->getReconstructionDB())
+    {
+        if (rec->getIsVisible() != checked)
+        {
+            rec->setIsVisible(checked);
 
-void SModelSeriesList::showReconstructions(bool show)
-{
-//    if(m_showCheckBox)
-//    {
-//        m_showCheckBox->setCheckState(show ? Qt::Unchecked : Qt::Checked );
-//    }
+            ::fwData::Reconstruction::VisibilityModifiedSignalType::sptr sig;
+            sig = rec->signal< ::fwData::Reconstruction::VisibilityModifiedSignalType >(
+                ::fwData::Reconstruction::s_VISIBILITY_MODIFIED_SIG);
+            sig->asyncEmit(checked);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -204,31 +170,6 @@ void SModelSeriesList::showReconstructions(bool show)
     }
 
     return connections;
-}
-
-//------------------------------------------------------------------------------
-
-void SModelSeriesList::onCheckAllCheckBox()
-{
-    this->onCheckAllBoxes(true);
-}
-
-//------------------------------------------------------------------------------
-
-void SModelSeriesList::onUnCheckAllCheckBox()
-{
-    this->onCheckAllBoxes(false);
-}
-
-//------------------------------------------------------------------------------
-
-void SModelSeriesList::onCheckAllBoxes( bool visible )
-{
-//    for( int i = 0; i < m_tree->topLevelItemCount(); ++i )
-//    {
-//        QTreeWidgetItem* item = m_tree->topLevelItem( i );
-//        item->setCheckState(0, visible ? Qt::Checked : Qt::Unchecked );
-//    }
 }
 
 //------------------------------------------------------------------------------

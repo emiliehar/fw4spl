@@ -43,7 +43,7 @@ public:
     /// Return the data stored under the given role for the item referred to by the index.
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    UIMEDDATAQML_API void setModelSeries(const ::fwMedData::ModelSeries::sptr& modelSeries);
+    UIMEDDATAQML_API void updateModelSeries(const ::fwMedData::ModelSeries::sptr& modelSeries);
 
 protected:
     /// Expose the role names, so that they can be accessed via QML

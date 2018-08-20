@@ -39,7 +39,7 @@ QHash<int, QByteArray> OrganListModel::roleNames() const
 
 //------------------------------------------------------------------------------
 
-void OrganListModel::setModelSeries(const ::fwMedData::ModelSeries::sptr& modelSeries)
+void OrganListModel::updateModelSeries(const ::fwMedData::ModelSeries::sptr& modelSeries)
 {
     beginResetModel();
     m_modelSeries = modelSeries;
@@ -50,7 +50,12 @@ void OrganListModel::setModelSeries(const ::fwMedData::ModelSeries::sptr& modelS
 
 int OrganListModel::rowCount(const QModelIndex&) const
 {
-    return static_cast<int>(m_modelSeries->getReconstructionDB().size());
+    int count = 0;
+    if (m_modelSeries)
+    {
+        count = static_cast<int>(m_modelSeries->getReconstructionDB().size());
+    }
+    return count;
 }
 
 //------------------------------------------------------------------------------

@@ -36,6 +36,14 @@ public:
     /// Destructor. Do nothing.
     virtual ~IQmlEditor() noexcept;
 
+Q_SIGNALS:
+    void started();
+    void stopped();
+
+protected:
+    FWQML_API virtual void starting() override;
+    FWQML_API virtual void stopping() override;
+
 };
 
 } // namespace fwQml
