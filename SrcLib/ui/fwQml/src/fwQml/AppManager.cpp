@@ -22,7 +22,6 @@ AppManager::AppManager()
 
 AppManager::~AppManager()
 {
-
 }
 
 //------------------------------------------------------------------------------
@@ -65,6 +64,7 @@ void AppManager::stopAndUnregisterServices()
     }
     m_startedService.clear();
     m_createdService.clear();
+    m_registeredObject.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -84,21 +84,31 @@ void AppManager::registerObj(const ::fwServices::IService::sptr& srv, const ::fw
     {
         srv->unregisterObject(key, access);
     }
-    srv->registerObject(obj, key, access, autoConnect, optional);
-    if (optional)
+    if (obj)
     {
-        srv->swapKey(key, obj);
+        srv->registerObject(obj, key, access, autoConnect, optional);
+        if (optional)
+        {
+            srv->swapKey(key, obj);
+        }
+        else if (isStarted)
+        {
+            srv->start();
+        }
+        else if (autoStart) // TODO check if it has all the required inputs
+        {
+            this->startService(srv);
+        }
+        m_registeredObject.emplace(obj);
     }
-    else if (isStarted)
+    else
     {
-        srv->start();
+        auto itStarted = std::find(m_startedService.begin(), m_startedService.end(), srv);
+        if (itStarted != m_startedService.end())
+        {
+            m_startedService.erase(itStarted);
+        }
     }
-    else if (autoStart) // TODO check if it has all the required inputs
-    {
-        this->startService(srv);
-    }
-
-    m_registeredObject.emplace(obj);
 }
 
 } // namespace fwQml
