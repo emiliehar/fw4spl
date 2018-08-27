@@ -32,9 +32,9 @@ void Plugin::initialize()
 {
     SPTR(::fwQml::QmlEngine) engine = ::fwQml::QmlEngine::getDefault();
 
-    auto path = ::fwRuntime::getBundleResourceFilePath("uiReconstructionQml", "qmldir");
+    auto path = ::fwRuntime::getBundleResourcePath("uiReconstructionQml");
 
-    engine->importModulePath(path.parent_path());
+    engine->importModulePath(path);
 }
 
 //------------------------------------------------------------------------------

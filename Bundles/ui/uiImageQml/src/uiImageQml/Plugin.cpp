@@ -33,9 +33,9 @@ void Plugin::initialize()
 {
     SPTR(::fwQml::QmlEngine) engine = ::fwQml::QmlEngine::getDefault();
 
-    auto path = ::fwRuntime::getBundleResourceFilePath("uiImageQml", "qmldir");
+    auto path = ::fwRuntime::getBundleResourcePath("uiImageQml");
 
-    engine->importModulePath(path.parent_path());
+    engine->importModulePath(path);
 }
 
 //------------------------------------------------------------------------------
