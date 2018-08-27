@@ -16,9 +16,8 @@ namespace fwQml
 {
 
 /**
- * @brief Defines the service interface managing the editor service for object.
+ * @brief Defines the base class for service editing an object associated to a qml UI.
  */
-
 class FWQML_CLASS_API IQmlEditor : public QObject,
                                    public ::fwServices::IService
 {
@@ -28,20 +27,26 @@ public:
 
     fwCoreServiceClassDefinitionsMacro( (IQmlEditor)(::fwServices::IService) );
 
-    /**
-     * @brief   Constructor. Do nothing (Just initialize parameters).
-     */
+    /// Constructor. Do nothing.
     IQmlEditor() noexcept;
 
     /// Destructor. Do nothing.
     virtual ~IQmlEditor() noexcept;
 
 Q_SIGNALS:
+
+    /// Signal emitted when the service is started
     void started();
+
+    /// Signal emitted when the service is stopped
     void stopped();
 
 protected:
+
+    /// call updating and emit 'started' qt signal
     FWQML_API virtual void starting() override;
+
+    /// emit 'stopped' qt signal
     FWQML_API virtual void stopping() override;
 
 };

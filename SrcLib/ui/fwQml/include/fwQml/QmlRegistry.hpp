@@ -13,7 +13,16 @@
 namespace fwQml
 {
 
-/// This call allows to register the Qml modules
+/**
+ * @brief This class allows to register the Qml modules.
+ *
+ * It should be used as a global static variable declared on the top of your cpp file.
+ *
+ * @code{.cpp}
+        static ::fwQml::QmlRegistry< SServiceName> registrar("bundleName", versionMajor, versionMinor,
+                "SServiceName");
+   @endcode
+ */
 template<typename Type>
 class QmlRegistry
 {

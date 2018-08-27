@@ -6,11 +6,6 @@
 
 #include "fwQml/IQmlEditor.hpp"
 
-#include <fwCore/util/LazyInstantiator.hpp>
-
-#include <QQmlComponent>
-#include <QQuickWindow>
-
 namespace fwQml
 {
 
