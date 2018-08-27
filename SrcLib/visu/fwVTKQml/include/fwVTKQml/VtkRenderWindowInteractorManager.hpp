@@ -27,7 +27,7 @@ namespace fwVTKQml
 {
 
 /**
- * @brief   Defines a class to manage vtkRenderWindowInteractor in a window.
+ * @brief  Manage vtkRenderWindowInteractor in a qml interface.
  */
 class FWVTKQML_CLASS_API VtkRenderWindowInteractorManager : public ::fwRenderVTK::IVtkRenderWindowInteractorManager
 {
@@ -37,23 +37,27 @@ public:
     fwCoreNonInstanciableClassDefinitionsMacro( (VtkRenderWindowInteractorManager)
                                                 (::fwRenderVTK::IVtkRenderWindowInteractorManager) )
 
+    /// Constructor. Do nothing
     FWVTKQML_API VtkRenderWindowInteractorManager(::fwRenderVTK::IVtkRenderWindowInteractorManager::Key key);
 
+    /// Destructor
     FWVTKQML_API virtual ~VtkRenderWindowInteractorManager();
 
-    /// Creates an interactor and installs it in window.
+    /// Does nothing.
     FWVTKQML_API virtual void installInteractor( ::fwGui::container::fwContainer::sptr _parent ) override;
 
-    /// Deletes interactor and manage correctly the window (removing layout).
+    /// Does nothing
     FWVTKQML_API virtual void uninstallInteractor() override;
 
     /// Return a pointer on interactor
     FWVTKQML_API virtual ::vtkRenderWindowInteractor* getInteractor() override;
 
+    /// Set the qml frame buffer item used to render the scene
     FWVTKQML_API void setFrameBuffer(QPointer< ::fwVTKQml::FrameBufferItem > frameBuffer );
 
 private:
 
+    /// frame buffer item
     QPointer< ::fwVTKQml::FrameBufferItem > m_frameBufferItem;
 
 };

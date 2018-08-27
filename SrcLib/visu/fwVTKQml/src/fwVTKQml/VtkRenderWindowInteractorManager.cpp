@@ -40,7 +40,7 @@ namespace fwVTKQml
 //-----------------------------------------------------------------------------
 
 VtkRenderWindowInteractorManager::VtkRenderWindowInteractorManager(
-    ::fwRenderVTK::IVtkRenderWindowInteractorManager::Key key )
+    ::fwRenderVTK::IVtkRenderWindowInteractorManager::Key )
 {
 }
 
@@ -52,7 +52,7 @@ VtkRenderWindowInteractorManager::~VtkRenderWindowInteractorManager()
 
 //-----------------------------------------------------------------------------
 
-void VtkRenderWindowInteractorManager::installInteractor( ::fwGui::container::fwContainer::sptr _parent )
+void VtkRenderWindowInteractorManager::installInteractor( ::fwGui::container::fwContainer::sptr )
 {
 
 }

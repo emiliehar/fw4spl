@@ -23,9 +23,7 @@ namespace fwVTKQml
 class FrameBufferRenderer;
 
 /**
- * @brief The vtkInternalOpenGLRenderWindow class
- *
- * This class is used to render a offscreen VTK window in a FrameBuffer
+ * @brief This class is used to render a offscreen VTK window in a FrameBuffer
  */
 class FWVTKQML_CLASS_API vtkInternalOpenGLRenderWindow : public vtkExternalOpenGLRenderWindow,
                                                          protected QOpenGLFunctions_3_1
@@ -37,7 +35,9 @@ public:
     vtkTypeMacro(vtkInternalOpenGLRenderWindow, vtkGenericOpenGLRenderWindow);
 
 protected:
+    /// Constructor
     FWVTKQML_API vtkInternalOpenGLRenderWindow();
+    /// Destructor
     FWVTKQML_API ~vtkInternalOpenGLRenderWindow();
 
 public:
@@ -48,28 +48,24 @@ public:
 
     virtual FWVTKQML_API void OpenGLEndState();
 
-    /**
-     * @brief: Call render method of the window
-     */
+    /// Call render method of the renderer
     virtual FWVTKQML_API void Render() override;
-    /**
-     *  @brief: render into the framebuffer
-     */
+
+    /// Render into the framebuffer
     FWVTKQML_API void  internalRender();
-    /**
-     *  @brief: set frame buffer to the window
-     */
+
+    /// Set frame buffer to the window
     FWVTKQML_API void setFrameBufferObject(QOpenGLFramebufferObject*);
-    /**
-     * @brief: configure renderer
-     */
+
+    /// Set the renderer
     FWVTKQML_API void setRenderer(FrameBufferRenderer*);
-    /**
-     * @brief: return renderer
-     */
+
+    /// Return the renderer
     FWVTKQML_API FrameBufferRenderer* getRenderer() const;
 
 private:
+
+    /// Frame renderer
     FrameBufferRenderer* m_qtParentRenderer;
 };
 

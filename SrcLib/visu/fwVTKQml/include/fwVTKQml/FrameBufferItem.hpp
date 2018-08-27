@@ -31,6 +31,9 @@ namespace fwVTKQml
 
 class FrameBufferItem;
 
+/**
+ * @brief FrameBuffer renderer, it is used to render the VTK scene into a qml interface
+ */
 class FWVTKQML_CLASS_API FrameBufferRenderer : public QObject,
                                                public QQuickFramebufferObject::Renderer
 {
@@ -73,6 +76,9 @@ private:
     friend class vtkInternalOpenGLRenderWindow;
 };
 
+/**
+ * @brief qml FrameBuffer iter, it is used to render the VTK scene into a qml interface
+ */
 class FWVTKQML_CLASS_API FrameBufferItem : public QQuickFramebufferObject
 {
 Q_OBJECT
@@ -96,7 +102,10 @@ public:
      */
     FWVTKQML_API vtkSmartPointer<vtkRenderer>    getRenderer() const;
 
+    /// Lock the renderer
     FWVTKQML_API void    lockRenderer();
+
+    /// Unlock the renderer
     FWVTKQML_API void    unlockRenderer();
 
 public Q_SLOTS:
@@ -117,7 +126,6 @@ protected:
     FWVTKQML_API void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     FWVTKQML_API void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     FWVTKQML_API void mouseDoubleClickEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
-
     /**
      * }@
      */
