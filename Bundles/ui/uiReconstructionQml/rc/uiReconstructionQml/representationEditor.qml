@@ -26,7 +26,6 @@ Item {
         }
 
         onMaterialChanged: {
-            console.log("[OSLM_LOG] material changed: " + representationMode + ", " + shadingMode + ", " + optionMode)
             switch (representationMode) {
             case 1:
                 surfaceButton.checked = true
