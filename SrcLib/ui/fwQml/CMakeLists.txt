@@ -1,7 +1,5 @@
 fwLoadProperties()
 
-target_compile_definitions(${FWPROJECT_NAME} PUBLIC "-DQT_NO_KEYWORDS")
-
 find_package(Qt5 QUIET COMPONENTS Core Gui Qml Quick REQUIRED)
 
 fwForwardInclude(
