@@ -31,7 +31,7 @@ Item {
         RowLayout {
 
             Layout.fillWidth: true
-            Layout.maximumHeight: 50
+            Layout.maximumHeight: 30
 
             Rectangle {
                 Layout.fillHeight: true
@@ -40,10 +40,11 @@ Item {
 
                 CheckBox {
                     id: hideAll
-                    text: "Hide all organs"
+                    text: "Hide all"
                     anchors.fill: parent
                     anchors.rightMargin: 4
                     anchors.left: parent.left
+                    anchors.centerIn: parent
                     onCheckedChanged: {
                         modelSeriesList.onShowReconstructions(checked)
                         checkAll.enabled = !checked

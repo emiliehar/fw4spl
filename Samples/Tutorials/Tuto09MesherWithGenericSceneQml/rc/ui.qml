@@ -1,9 +1,9 @@
-import QtQuick 2.1
-import QtQuick.Controls 1.4
+import QtQuick 2.9
+import QtQuick.Controls 2.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
-import tuto09.AppManager 1.0
+import tuto09 1.0
 import fwVTKQml 1.0
 import uiImageQml 1.0
 import uiMedDataQml 1.0
@@ -34,55 +34,53 @@ ApplicationWindow {
         }
     }
 
-    MenuBar {
+    menuBar: MenuBar {
         Menu {
-            title: "File"
+            title: qsTr("&File")
 
-            MenuItem {
-                text: "Open image"
+            Action {
+                text: qsTr("&Open image")
                 shortcut: "Ctrl+O"
                 onTriggered: appManager.onOpenImage()
             }
-            MenuItem {
+            Action {
                 id: saveMesh
-                text: "Save mesh"
+                text: qsTr("&Save mesh")
                 shortcut: "Ctrl+S"
                 enabled: false
                 onTriggered: appManager.onSaveMesh()
             }
-            MenuItem {
-                text: "Quit"
+            Action {
+                text: qsTr("&Quit")
                 shortcut: "Ctrl+Q"
+                onTriggered: root.close()
             }
         }
         Menu {
             title: "Mesher"
 
-            MenuItem {
+            Action {
                 id: actionMesh50
-                text: "Create Mesh 50"
+                text: qsTr("Create Mesh 50")
                 enabled: false
                 onTriggered: appManager.applyMesher(50)
             }
-            MenuItem {
+            Action {
                 id: actionMesh80
-                text: "Create Mesh 80"
+                text: qsTr("Create Mesh 80")
                 enabled: false
                 onTriggered: appManager.applyMesher(80)
             }
         }
     }
 
-    SplitView {
+    RowLayout {
         anchors.fill: parent
-        orientation: Qt.Horizontal
-
 
         ColumnLayout {
             spacing: 2
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.minimumWidth: 300
 
             Rectangle {
                 Layout.fillWidth: true
@@ -103,7 +101,6 @@ ApplicationWindow {
 
             RowLayout {
                 Layout.fillHeight: true
-                Layout.minimumWidth: parent.width
                 Layout.maximumHeight: 50
                 spacing: 4
 
@@ -185,55 +182,61 @@ ApplicationWindow {
         }
 
         ScrollView {
-        ColumnLayout {
-            Rectangle {
-                Layout.preferredHeight: 300
-                Layout.minimumWidth: 300
 
-                color: "transparent"
+            Layout.fillHeight: true
+            Layout.minimumWidth: 305
+            spacing: 10
 
-                ModelList {
-                    id: modelList
-                    anchors.fill: parent
+            ColumnLayout {
 
-                    onServiceCreated: {
-                        appManager.onServiceCreated(srv)
+                Rectangle {
+                    Layout.preferredHeight: 300
+                    Layout.preferredWidth: 300
+
+                    color: "transparent"
+
+                    ModelList {
+                        id: modelList
+                        anchors.fill: parent
+
+                        onServiceCreated: {
+                            appManager.onServiceCreated(srv)
+                        }
+                    }
+                }
+
+                Rectangle {
+                    Layout.preferredHeight: 60
+                    Layout.preferredWidth: 300
+
+                    color: "transparent"
+
+                    OrganMaterialEditor {
+                        id: organMaterialEditor
+                        anchors.fill: parent
+
+                        onServiceCreated: {
+                            appManager.onServiceCreated(srv)
+                        }
+                    }
+                }
+
+                Rectangle {
+                    Layout.preferredHeight: 400
+                    Layout.preferredWidth: 300
+
+                    color: "transparent"
+
+                    RepresentationEditor {
+                        id: representationEditor
+                        anchors.fill: parent
+
+                        onServiceCreated: {
+                            appManager.onServiceCreated(srv)
+                        }
                     }
                 }
             }
-
-            Rectangle {
-                Layout.preferredHeight: 100
-                Layout.minimumWidth: 300
-
-                color: "transparent"
-
-                OrganMaterialEditor {
-                    id: organMaterialEditor
-                    anchors.fill: parent
-
-                    onServiceCreated: {
-                        appManager.onServiceCreated(srv)
-                    }
-                }
-            }
-
-            Rectangle {
-                Layout.preferredHeight: 400
-                Layout.minimumWidth: 300
-
-                color: "transparent"
-
-                RepresentationEditor {
-                    id: representationEditor
-                    anchors.fill: parent
-
-                    onServiceCreated: {
-                        appManager.onServiceCreated(srv)
-                    }
-                }
-            }
-        }
         }
     }
 
@@ -254,5 +257,6 @@ ApplicationWindow {
             appManager.onSnap(snapFileDialog.fileUrl)
         }
     }
+
 }
 

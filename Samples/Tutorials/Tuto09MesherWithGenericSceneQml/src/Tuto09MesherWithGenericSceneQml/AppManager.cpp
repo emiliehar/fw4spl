@@ -39,7 +39,7 @@
 namespace Tuto09MesherWithGenericSceneQml
 {
 
-static ::fwQml::QmlRegistry<AppManager> registrar("tuto09.AppManager", 1, 0, "AppManager");
+static ::fwQml::QmlRegistry<AppManager> registrar("tuto09", 1, 0, "AppManager");
 
 static const std::string s_IMAGE_ID          = "image";
 static const std::string s_MODELSERIES_ID    = "modelSeries";

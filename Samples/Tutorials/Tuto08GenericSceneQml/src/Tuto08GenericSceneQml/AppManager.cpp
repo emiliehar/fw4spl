@@ -32,7 +32,7 @@
 namespace Tuto08GenericSceneQml
 {
 
-static ::fwQml::QmlRegistry<AppManager> registrar("tuto08.AppManager", 1, 0, "AppManager");
+static ::fwQml::QmlRegistry<AppManager> registrar("tuto08", 1, 0, "AppManager");
 
 static const std::string s_IMAGE_ID       = "image";
 static const std::string s_MODELSERIES_ID = "modelSeries";

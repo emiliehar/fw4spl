@@ -46,7 +46,7 @@ void Plugin::initialize()
 {
     SPTR(::fwQml::QmlEngine) engine = ::fwQml::QmlEngine::getDefault();
 
-    auto path = ::fwRuntime::getBundleResourceFilePath("Tuto08GenericSceneQml-0.1/ui.qml");
+    auto path = ::fwRuntime::getBundleResourceFilePath("Tuto08GenericSceneQml", "ui.qml");
 
     engine->loadMainComponent(path);
 }

@@ -1,9 +1,9 @@
-import QtQuick 2.1
-import QtQuick.Controls 1.4
+import QtQuick 2.9
+import QtQuick.Controls 2.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.0
-import tuto08.AppManager 1.0
+import tuto08 1.0
 import fwVTKQml 1.0
 import uiImageQml 1.0
 
@@ -28,31 +28,34 @@ ApplicationWindow {
         }
     }
 
-    MenuBar {
+    menuBar: MenuBar {
         Menu {
-            title: "File"
-
-            MenuItem {
-                text: "Open image"
+            title: qsTr("&File")
+            Action {
+                text: qsTr("&Open image...")
                 shortcut: "Ctrl+I"
                 onTriggered: appManager.onOpenImage()
             }
-            MenuItem {
-                text: "Open meshes"
+            Action {
+                text: qsTr("&Open meshes...")
                 shortcut: "Ctrl+M"
                 onTriggered: appManager.onOpenModel()
             }
-            MenuItem {
-                text: "Open texture"
+            Action {
+                text: qsTr("&Open texture...")
                 shortcut: "Ctrl+T"
                 onTriggered: appManager.onOpenTexture()
             }
-            MenuItem {
-                text: "Quit"
+            MenuSeparator { }
+            Action {
+                text: qsTr("&Quit")
                 shortcut: "Ctrl+Q"
+                onTriggered: root.close()
             }
         }
     }
+
+
 
     ColumnLayout {
         spacing: 2
@@ -76,7 +79,6 @@ ApplicationWindow {
 
         RowLayout {
             Layout.fillHeight: true
-            Layout.minimumWidth: parent.width
             Layout.maximumHeight: 50
             spacing: 4
 
@@ -94,7 +96,7 @@ ApplicationWindow {
                     visible: true
                     enabled: false
 
-                    model: ["One slice", "Three slice"]
+                    model: [qsTr("One slice"), qsTr("Three slice")]
 
                     currentIndex: 1
                     onActivated: {
@@ -119,7 +121,7 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: "Scan"
+                    text: qsTr("Scan")
                     onCheckedChanged: {
                         sliceEditor.enabled = checked
                         appManager.onShowScan(checked)
@@ -148,7 +150,7 @@ ApplicationWindow {
 
                 Button {
                     id: snapButton
-                    text: "Snap"
+                    text: qsTr("Snap")
                     anchors.fill: parent
                     anchors.rightMargin: 4
                     anchors.left: parent.left
@@ -162,7 +164,7 @@ ApplicationWindow {
 
     FileDialog {
         id: snapFileDialog
-        title: "Save snapshot as"
+        title: qsTr("Save snapshot as")
         folder: shortcuts.home
         selectExisting: false
         nameFilters: [
