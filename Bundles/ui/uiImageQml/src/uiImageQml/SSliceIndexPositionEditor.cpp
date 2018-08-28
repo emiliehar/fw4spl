@@ -159,12 +159,6 @@ void SSliceIndexPositionEditor::updateSliceType(int from, int to)
 
 //------------------------------------------------------------------------------
 
-void SSliceIndexPositionEditor::info( std::ostream& _sstream )
-{
-}
-
-//------------------------------------------------------------------------------
-
 void SSliceIndexPositionEditor::updateSliceIndexFromImg()
 {
     ::fwData::Image::sptr image = this->getInOut< ::fwData::Image >(s_IMAGE_INOUT);

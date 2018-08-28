@@ -105,9 +105,6 @@ protected:
      */
     UIIMAGEQML_API virtual KeyConnectionsMap getAutoConnections() const override;
 
-    /// Overrides
-    UIIMAGEQML_API virtual void info( std::ostream& _sstream ) override;
-
     /// Update the editor slider from the image slice index.
     UIIMAGEQML_API void updateSliceIndexFromImg();
 
