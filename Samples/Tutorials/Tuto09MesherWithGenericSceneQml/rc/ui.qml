@@ -77,10 +77,11 @@ ApplicationWindow {
     }
 
     RowLayout {
+        spacing: 0
         anchors.fill: parent
 
         ColumnLayout {
-            spacing: 2
+            spacing: 0
             Layout.fillHeight: true
             Layout.fillWidth: true
 
@@ -105,7 +106,6 @@ ApplicationWindow {
             RowLayout {
                 Layout.fillHeight: true
                 Layout.maximumHeight: 50
-                spacing: 4
 
                 Rectangle {
                     Layout.fillHeight: true
@@ -185,21 +185,30 @@ ApplicationWindow {
         }
 
         ScrollView {
+            spacing: 5
+            enabled: true
+            transformOrigin: Item.Center
 
             Layout.fillHeight: true
-            Layout.minimumWidth: 305
-            spacing: 10
+            Layout.minimumWidth: 300
 
             ColumnLayout {
+                spacing: 2
+                anchors.rightMargin: 0
+                anchors.leftMargin: 0
+                anchors.bottomMargin: 0
+                anchors.topMargin: 0
+                anchors.fill: parent
 
                 Rectangle {
                     Layout.preferredHeight: 300
                     Layout.preferredWidth: 300
-
                     color: "transparent"
 
                     ModelList {
                         id: modelList
+                        anchors.rightMargin: 5
+                        anchors.leftMargin: 5
                         anchors.fill: parent
 
                         onServiceCreated: {
@@ -216,6 +225,8 @@ ApplicationWindow {
 
                     OrganMaterialEditor {
                         id: organMaterialEditor
+                        anchors.rightMargin: 5
+                        anchors.leftMargin: 5
                         anchors.fill: parent
 
                         onServiceCreated: {
@@ -232,6 +243,8 @@ ApplicationWindow {
 
                     RepresentationEditor {
                         id: representationEditor
+                        anchors.rightMargin: 5
+                        anchors.leftMargin: 5
                         anchors.fill: parent
 
                         onServiceCreated: {
