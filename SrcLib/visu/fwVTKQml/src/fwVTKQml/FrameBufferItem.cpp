@@ -10,8 +10,6 @@
 
 #include <fwCore/spyLog.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 #include <QMimeData>
 #include <QOpenGLFramebufferObject>
 #include <QQuickFramebufferObject>
@@ -31,8 +29,6 @@
 
 namespace fwVTKQml
 {
-
-static ::fwQml::QmlRegistry<FrameBufferItem> registrar("fwVTKQml", 1, 0, "FrameBuffer");
 
 FrameBufferRenderer::FrameBufferRenderer(vtkInternalOpenGLRenderWindow* rw, FrameBufferItem* item) :
     m_vtkRenderWindow(rw),

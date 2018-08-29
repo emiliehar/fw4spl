@@ -12,8 +12,6 @@
 #include <fwData/Mesh.hpp>
 #include <fwData/Reconstruction.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 #include <fwRuntime/ConfigurationElement.hpp>
 #include <fwRuntime/operations.hpp>
 
@@ -28,8 +26,6 @@ fwServicesRegisterMacro( ::fwQml::IQmlEditor, ::uiReconstructionQml::SOrganMater
                          ::fwData::Reconstruction );
 
 static const ::fwServices::IService::KeyType s_RECONSTRUCTION_INOUT = "reconstruction";
-
-static ::fwQml::QmlRegistry<SOrganMaterialEditor> registrar("uiReconstructionQml", 1, 0, "SOrganMaterialEditor");
 
 //------------------------------------------------------------------------------
 

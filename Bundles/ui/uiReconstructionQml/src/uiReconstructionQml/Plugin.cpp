@@ -6,6 +6,9 @@
 
 #include "uiReconstructionQml/Plugin.hpp"
 
+#include "uiReconstructionQml/SOrganMaterialEditor.hpp"
+#include "uiReconstructionQml/SRepresentationEditor.hpp"
+
 #include <fwQml/QmlEngine.hpp>
 
 #include <fwRuntime/operations.hpp>
@@ -24,6 +27,8 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
+    qmlRegisterType<SOrganMaterialEditor>("uiReconstructionQml", 1, 0, "SOrganMaterialEditor");
+    qmlRegisterType<SRepresentationEditor>("uiReconstructionQml", 1, 0, "SRepresentationEditor");
 }
 
 //------------------------------------------------------------------------------

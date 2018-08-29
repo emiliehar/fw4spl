@@ -23,7 +23,6 @@
 #include <fwMedData/ModelSeries.hpp>
 
 #include <fwQml/IQmlEditor.hpp>
-#include <fwQml/QmlRegistry.hpp>
 
 #include <fwRenderVTK/factory/new.hpp>
 #include <fwRenderVTK/SRender.hpp>
@@ -38,8 +37,6 @@
 
 namespace Tuto09MesherWithGenericSceneQml
 {
-
-static ::fwQml::QmlRegistry<AppManager> registrar("tuto09", 1, 0, "AppManager");
 
 static const std::string s_IMAGE_ID          = "image";
 static const std::string s_MODELSERIES_ID    = "modelSeries";

@@ -22,8 +22,6 @@
 
 #include <fwMedData/ModelSeries.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 namespace uiMedDataQml
 {
 
@@ -31,8 +29,6 @@ const ::fwCom::Signals::SignalKeyType SModelSeriesList::s_RECONSTRUCTION_SELECTE
 const ::fwCom::Signals::SignalKeyType SModelSeriesList::s_EMPTIED_SELECTION_SIG       = "emptiedSelection";
 
 const ::fwServices::IService::KeyType s_MODEL_SERIES_INOUT = "modelSeries";
-
-static ::fwQml::QmlRegistry<SModelSeriesList> registrar("uiMedDataQml", 1, 0, "SModelSeriesList");
 
 SModelSeriesList::SModelSeriesList() noexcept :
     m_listModel(nullptr)

@@ -6,6 +6,9 @@
 
 #include "uiMedDataQml/Plugin.hpp"
 
+#include "uiMedDataQml/OrganListModel.hpp"
+#include "uiMedDataQml/SModelSeriesList.hpp"
+
 #include <fwQml/QmlEngine.hpp>
 
 #include <fwRuntime/operations.hpp>
@@ -24,7 +27,8 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
-
+    qmlRegisterType<SModelSeriesList>("uiMedDataQml", 1, 0, "SModelSeriesList");
+    qmlRegisterType<OrganListModel>("uiMedDataQml", 1, 0, "OrganListModel");
 }
 
 //------------------------------------------------------------------------------

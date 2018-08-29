@@ -23,8 +23,6 @@
 #include <fwDataTools/fieldHelper/Image.hpp>
 #include <fwDataTools/fieldHelper/MedicalImageHelpers.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 #include <fwRuntime/ConfigurationElement.hpp>
 #include <fwRuntime/operations.hpp>
 
@@ -36,8 +34,6 @@
 
 namespace uiImageQml
 {
-
-static ::fwQml::QmlRegistry<SSliceIndexPositionEditor> registrar("uiImageQml", 1, 0, "SSliceIndexPositionEditor");
 
 const std::string* SSliceIndexPositionEditor::SLICE_INDEX_FIELDID[ 3 ] =
 {

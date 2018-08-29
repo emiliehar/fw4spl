@@ -12,8 +12,6 @@
 #include <fwData/Mesh.hpp>
 #include <fwData/Reconstruction.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 #include <fwRuntime/operations.hpp>
 
 #include <fwServices/macros.hpp>
@@ -28,8 +26,6 @@ fwServicesRegisterMacro( ::fwQml::IQmlEditor, ::uiReconstructionQml::SRepresenta
 //------------------------------------------------------------------------------
 
 static const ::fwServices::IService::KeyType s_RECONSTRUCTION_INOUT = "reconstruction";
-
-static ::fwQml::QmlRegistry<SRepresentationEditor> registrar("uiReconstructionQml", 1, 0, "SRepresentationEditor");
 
 //------------------------------------------------------------------------------
 

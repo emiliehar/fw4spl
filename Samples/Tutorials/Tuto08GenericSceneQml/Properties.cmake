@@ -24,6 +24,6 @@ set( REQUIREMENTS
     uiIO
     uiImageQml
     visuVTKAdaptor
-    visuVTKQt
+    visuVTKQml
     fwlauncher
 )

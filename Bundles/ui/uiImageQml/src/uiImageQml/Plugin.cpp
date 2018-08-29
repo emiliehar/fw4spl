@@ -6,6 +6,8 @@
 
 #include "uiImageQml/Plugin.hpp"
 
+#include "uiImageQml/SSliceIndexPositionEditor.hpp"
+
 #include <fwQml/QmlEngine.hpp>
 
 #include <fwRuntime/operations.hpp>
@@ -24,7 +26,7 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
-
+    qmlRegisterType<SSliceIndexPositionEditor>("uiImageQml", 1, 0, "SSliceIndexPositionEditor");
 }
 
 //------------------------------------------------------------------------------

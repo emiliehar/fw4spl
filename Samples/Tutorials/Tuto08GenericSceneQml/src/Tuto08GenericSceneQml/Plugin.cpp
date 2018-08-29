@@ -6,6 +6,8 @@
 
 #include "Tuto08GenericSceneQml/Plugin.hpp"
 
+#include "Tuto08GenericSceneQml/AppManager.hpp"
+
 #include <fwQml/QmlEngine.hpp>
 
 #include <fwRuntime/operations.hpp>
@@ -37,7 +39,7 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
-
+    qmlRegisterType< AppManager >("tuto08", 1, 0, "AppManager");
 }
 
 //------------------------------------------------------------------------------

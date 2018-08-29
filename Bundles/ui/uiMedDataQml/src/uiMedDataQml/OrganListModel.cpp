@@ -8,12 +8,8 @@
 
 #include <fwData/Reconstruction.hpp>
 
-#include <fwQml/QmlRegistry.hpp>
-
 namespace uiMedDataQml
 {
-
-static ::fwQml::QmlRegistry<OrganListModel> registrar("uiMedDataQml", 1, 0, "OrganListModel");
 
 OrganListModel::OrganListModel() noexcept
 {

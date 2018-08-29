@@ -6,6 +6,8 @@
 
 #include "Tuto09MesherWithGenericSceneQml/Plugin.hpp"
 
+#include "Tuto09MesherWithGenericSceneQml/AppManager.hpp"
+
 #include <fwQml/QmlEngine.hpp>
 
 #include <fwRuntime/operations.hpp>
@@ -37,7 +39,7 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
-
+    qmlRegisterType<AppManager>("tuto09", 1, 0, "AppManager");
 }
 
 //------------------------------------------------------------------------------

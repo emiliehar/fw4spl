@@ -26,6 +26,6 @@ set( REQUIREMENTS
     uiMedDataQml
     uiReconstructionQml
     visuVTKAdaptor
-    visuVTKQt
+    visuVTKQml
     fwlauncher
 )
