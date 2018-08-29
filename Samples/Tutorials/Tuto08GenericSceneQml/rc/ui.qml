@@ -19,8 +19,10 @@ ApplicationWindow {
 
     AppManager {
         id: appManager
+        // @disable-check M16
         frameBuffer: scene3D
 
+        // @disable-check M16
         onImageLoaded: {
             sliceEditor.enabled=true
             sliceSelector.enabled=true
@@ -69,6 +71,7 @@ ApplicationWindow {
                 id: scene3D
                 anchors.fill: parent
 
+                // @disable-check M16
                 onReady: appManager.createVtkScene()
 
                 onWidthChanged: initialize()

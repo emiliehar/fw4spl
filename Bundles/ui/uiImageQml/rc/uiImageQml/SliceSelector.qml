@@ -20,15 +20,18 @@ Item {
     SSliceIndexPositionEditor {
         id: sliceIndexEditor
 
+        // @disable-check M16
         onSetSliceRange: {
             from = min
             to = max
         }
 
+        // @disable-check M16
         onSetSliceValue: {
             slider.value = value
         }
 
+        // @disable-check M16
         onSetSliceType: {
             sliceType.currentIndex = type
         }

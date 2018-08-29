@@ -18,8 +18,10 @@ Item {
     SModelSeriesList {
         id: modelSeriesList
 
+        // @disable-check M16
         listModel: organListModel
 
+        // @disable-check M16
         onStarted: {
             modelList.enabled = true
         }
