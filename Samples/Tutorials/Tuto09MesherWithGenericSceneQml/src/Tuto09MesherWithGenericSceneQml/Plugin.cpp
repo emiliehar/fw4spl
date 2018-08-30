@@ -13,10 +13,6 @@
 #include <fwRuntime/operations.hpp>
 #include <fwRuntime/utils/GenericExecutableFactoryRegistrar.hpp>
 
-#include <QQmlComponent>
-#include <QQmlContext>
-#include <QQuickWindow>
-
 namespace Tuto09MesherWithGenericSceneQml
 {
 

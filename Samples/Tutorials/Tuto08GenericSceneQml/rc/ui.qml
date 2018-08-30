@@ -57,8 +57,6 @@ ApplicationWindow {
         }
     }
 
-
-
     ColumnLayout {
         spacing: 2
         anchors.fill: parent

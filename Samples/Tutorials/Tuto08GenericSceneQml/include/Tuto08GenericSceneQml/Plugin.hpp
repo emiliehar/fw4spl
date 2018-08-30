@@ -8,14 +8,7 @@
 
 #include "Tuto08GenericSceneQml/config.hpp"
 
-#include <fwCom/Slot.hpp>
-
 #include <fwRuntime/Plugin.hpp>
-
-#include <fwServices/IService.hpp>
-
-#include <QPointer>
-#include <QQmlApplicationEngine>
 
 namespace Tuto08GenericSceneQml
 {
@@ -41,11 +34,6 @@ public:
     TUTO08GENERICSCENEQML_API void initialize();
 
     TUTO08GENERICSCENEQML_API void uninitialize() noexcept;
-
-private:
-
-    QPointer<QQmlApplicationEngine> m_engine;
-
 };
 
 } // namespace Tuto02DataServiceBasicCtrl

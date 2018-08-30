@@ -6,11 +6,6 @@
 
 #include "Tuto08GenericSceneQml/AppManager.hpp"
 
-#include <fwCom/Signal.hxx>
-#include <fwCom/Slot.hxx>
-
-#include <fwCore/spyLog.hpp>
-
 #include <fwDataTools/fieldHelper/Image.hpp>
 #include <fwDataTools/fieldHelper/MedicalImageHelpers.hpp>
 #include <fwDataTools/helper/Image.hpp>
@@ -148,36 +143,30 @@ void AppManager::createVtkScene()
 
 void AppManager::onOpenImage()
 {
-    auto imageSeriesReader = ::fwServices::add("::uiIO::editor::SIOSelector");
-    ::fwServices::IService::ConfigType imageSeriesReaderConfig;
-    imageSeriesReaderConfig.put("type.<xmlattr>.mode", "reader");
-    imageSeriesReaderConfig.put("type.<xmlattr>.class", "::fwMedData::ImageSeries");
-    imageSeriesReader->setConfiguration(imageSeriesReaderConfig);
-    imageSeriesReader->configure();
-    imageSeriesReader->start();
-    imageSeriesReader->update();
-    ::fwMedData::ImageSeries::sptr imageSeries = imageSeriesReader->getOutput< ::fwMedData::ImageSeries >("data");
+    auto imageReader = ::fwServices::add("::uiIO::editor::SIOSelector");
+    ::fwServices::IService::ConfigType imageReaderConfig;
+    imageReaderConfig.put("type.<xmlattr>.mode", "reader");
+    imageReaderConfig.put("type.<xmlattr>.class", "::fwData::Image");
+    imageReader->setConfiguration(imageReaderConfig);
+    imageReader->configure();
+    imageReader->start();
+    imageReader->update();
+    ::fwData::Image::sptr image = imageReader->getOutput< ::fwData::Image >("data");
 
-    if (imageSeries)
+    if (image && ::fwDataTools::fieldHelper::MedicalImageHelpers::checkImageValidity(image))
     {
-        ::fwData::Image::sptr image = imageSeries->getImage();
+        ::fwDataTools::helper::Image helper( image );
 
-        if(::fwDataTools::fieldHelper::MedicalImageHelpers::
-           checkImageValidity(image))
-        {
-            ::fwDataTools::helper::Image helper( image );
+        helper.createLandmarks();
+        helper.createTransferFunctionPool();
+        helper.createImageSliceIndex();
 
-            helper.createLandmarks();
-            helper.createTransferFunctionPool();
-            helper.createImageSliceIndex();
-
-            this->addObject(image, s_IMAGE_ID);
-            Q_EMIT imageLoaded();
-        }
+        this->addObject(image, s_IMAGE_ID);
+        Q_EMIT imageLoaded();
     }
 
-    imageSeriesReader->stop();
-    ::fwServices::OSR::unregisterService(imageSeriesReader);
+    imageReader->stop();
+    ::fwServices::OSR::unregisterService(imageReader);
 }
 
 //------------------------------------------------------------------------------

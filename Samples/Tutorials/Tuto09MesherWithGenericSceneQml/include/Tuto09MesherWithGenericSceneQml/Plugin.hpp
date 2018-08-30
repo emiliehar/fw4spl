@@ -8,14 +8,7 @@
 
 #include "Tuto09MesherWithGenericSceneQml/config.hpp"
 
-#include <fwCom/Slot.hpp>
-
 #include <fwRuntime/Plugin.hpp>
-
-#include <fwServices/IService.hpp>
-
-#include <QPointer>
-#include <QQmlApplicationEngine>
 
 namespace Tuto09MesherWithGenericSceneQml
 {
@@ -41,10 +34,6 @@ public:
     TUTO09MESHERWITHGENERICSCENEQML_API void initialize();
 
     TUTO09MESHERWITHGENERICSCENEQML_API void uninitialize() noexcept;
-
-private:
-
-    QPointer<QQmlApplicationEngine> m_engine;
 
 };
 
