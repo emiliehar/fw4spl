@@ -17,6 +17,11 @@ namespace fwQml
 
 /**
  * @brief Defines the base class for service editing an object associated to a qml UI.
+ *
+ * Don't forget to register your editor in you bundle Plugin::start()
+ * @code{.cpp}
+    qmlRegisterType<MyEditor>("myBundle", versionMajor, versionMinor, "MyEditor");
+   @endcode
  */
 class FWQML_CLASS_API IQmlEditor : public QObject,
                                    public ::fwServices::IService
