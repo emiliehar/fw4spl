@@ -32,7 +32,7 @@ public:
     friend class FrameBufferRenderer;
 
     static vtkInternalOpenGLRenderWindow* New();
-    vtkTypeMacro(vtkInternalOpenGLRenderWindow, vtkGenericOpenGLRenderWindow);
+    vtkTypeMacro(vtkInternalOpenGLRenderWindow, vtkExternalOpenGLRenderWindow);
 
 protected:
     /// Constructor

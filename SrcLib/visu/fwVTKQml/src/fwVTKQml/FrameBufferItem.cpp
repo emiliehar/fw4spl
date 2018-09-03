@@ -107,7 +107,7 @@ FrameBufferItem::FrameBufferItem(QQuickItem* parent) :
     m_interactorAdapter(nullptr)
 {
     this->setMirrorVertically(true);
-//    setAcceptTouchEvents(true);
+    this->setAcceptTouchEvents(true);
     m_renderer = vtkSmartPointer<vtkRenderer>::New();
     this->setAcceptedMouseButtons(Qt::AllButtons);
     m_win = vtkSmartPointer<vtkInternalOpenGLRenderWindow>::New();

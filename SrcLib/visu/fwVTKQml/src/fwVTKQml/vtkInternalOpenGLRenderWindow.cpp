@@ -31,7 +31,7 @@ vtkInternalOpenGLRenderWindow::~vtkInternalOpenGLRenderWindow()
 void vtkInternalOpenGLRenderWindow::OpenGLInitState()
 {
     this->MakeCurrent();
-    initializeOpenGLFunctions();
+    this->initializeOpenGLFunctions();
 
     Superclass::OpenGLInitState();
 

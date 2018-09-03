@@ -51,7 +51,7 @@ Plugin::~Plugin() noexcept
 
 void Plugin::start()
 {
-    qmlRegisterType< ::fwVTKQml::FrameBufferItem >("fwVTKQml", 1, 0, "FrameBuffer");
+    qmlRegisterType< ::fwVTKQml::FrameBufferItem >("fwVTKQml", 1, 0, "FrameBufferItem");
 }
 
 //-----------------------------------------------------------------------------

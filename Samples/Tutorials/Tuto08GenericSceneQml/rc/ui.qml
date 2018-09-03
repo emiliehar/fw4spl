@@ -65,7 +65,7 @@ ApplicationWindow {
             Layout.fillHeight: true
             color: "#006699"
 
-            FrameBuffer {
+            FrameBufferItem {
                 id: scene3D
                 anchors.fill: parent
 
