@@ -71,10 +71,6 @@ ApplicationWindow {
 
                 // @disable-check M16
                 onReady: appManager.createVtkScene()
-
-                onWidthChanged: initialize()
-
-                onHeightChanged: initialize()
             }
         }
 
@@ -136,8 +132,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 visible: true
                 enabled: false
-                from: 0
-                to: 80
+                sliceOrientation: 2 // axial
 
                 onServiceCreated: {
                     appManager.onServiceCreated(srv)

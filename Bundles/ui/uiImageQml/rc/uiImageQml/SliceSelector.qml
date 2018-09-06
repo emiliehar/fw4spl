@@ -7,9 +7,7 @@ import uiImageQml 1.0
 Item {
     id: sliceIndexSelector
 
-    property int from: 0
-    property int to: 0
-    property int sliceIndex: 2
+    property int sliceOrientation: 2
 
     signal serviceCreated(var srv)
 
@@ -21,9 +19,12 @@ Item {
         id: sliceIndexEditor
 
         // @disable-check M16
+        sliceIndex: sliceIndexSelector.sliceOrientation
+
+        // @disable-check M16
         onSetSliceRange: {
-            from = min
-            to = max
+            slider.from = min
+            slider.to = max
         }
 
         // @disable-check M16
@@ -35,7 +36,6 @@ Item {
         onSetSliceType: {
             sliceType.currentIndex = type
         }
-
     }
 
     RowLayout {
@@ -55,7 +55,7 @@ Item {
 
                 model: ["Sagittal", "Frontal", "Axial"]
 
-                currentIndex: sliceIndexSelector.sliceIndex
+                currentIndex: sliceIndexSelector.sliceOrientation
 
                 onActivated: {
                     sliceIndexEditor.onSliceType(index)
@@ -75,8 +75,8 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                from: sliceIndexSelector.from
-                to: sliceIndexSelector.to
+                from: 0
+                to: 0
                 stepSize: 1
 
                 onValueChanged: {

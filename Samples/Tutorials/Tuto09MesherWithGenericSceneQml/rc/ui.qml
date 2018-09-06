@@ -96,10 +96,6 @@ ApplicationWindow {
 
                     // @disable-check M16
                     onReady: appManager.createVtkScene()
-
-                    onWidthChanged: initialize()
-
-                    onHeightChanged: initialize()
                 }
             }
 
@@ -157,8 +153,6 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     visible: false
-                    from: 0
-                    to: 80
 
                     onServiceCreated: {
                         appManager.onServiceCreated(srv)

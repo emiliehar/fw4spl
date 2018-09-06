@@ -12,8 +12,6 @@
 
 #include <fwQml/IQmlEditor.hpp>
 
-#include <fwTools/Failed.hpp>
-
 #include <QObject>
 
 namespace uiImageQml
@@ -30,25 +28,50 @@ namespace uiImageQml
  * - \b updateSliceIndex(int, int, int): update image slice index
  * - \b updateSliceType(int, int): update image slice type
  *
- * @section XML XML Configuration
+ * @section QSignal Qt Signals
+ * - \b setSliceRange(int min, int max): emitted to change the range of the slice indices slider
+ * - \b setSliceValue(int value): emitted to change the slice index value
+ * - \b setSliceType(int type): emitted to change the slice type (0: sagittal, 1: frontal, 2: axial)
  *
- * @code{.xml}
-   <service uid="..." type="::uiImageQml::SSliceIndexPositionEditor" autoConnect="yes">
-      <inout key="image" uid="..."/>
-      <sliceIndex>${orientationValue}</sliceIndex>
-   </service>
+ * @section QSlots Qt Slots
+ * - \b onSliceIndex(int): set the current slice index value
+ * - \b onSliceType(int): set the current slice type (0: sagittal, 1: frontal, 2: axial)
+ *
+ * @section QML Qml Configuration
+ *
+ * @code{.qml}
+    SSliceIndexPositionEditor {
+        id: sliceIndexEditor
+
+        sliceIndex: sliceIndexSelector.sliceIndex
+
+        onSetSliceRange: {
+            from = min
+            to = max
+        }
+
+        onSetSliceValue: {
+            slider.value = value
+        }
+
+        onSetSliceType: {
+            sliceType.currentIndex = type
+        }
+    }
    @endcode
- * @subsection In-Out In-Out
- * - \b image [::fwData::Image]: image on which the slice index will be changed
- *
  * @subsection Configuration Configuration
  * - \b sliceIndex : Axis on which the index will be changed, must be "axial", "frontal" or "sagittal".
+ *
+ * @section Objects Required objects
+ *
+ * @subsection In-Out In-Out
+ * - \b image [::fwData::Image]: image on which the slice index will be changed
  */
 class UIIMAGEQML_CLASS_API SSliceIndexPositionEditor : public ::fwQml::IQmlEditor,
                                                        public ::fwDataTools::helper::MedicalImageAdaptor
 {
 Q_OBJECT
-Q_PROPERTY(int sliceIndex MEMBER m_sliceIndex)
+Q_PROPERTY(int sliceIndex WRITE configureSliceIndex)
 public:
 
     fwCoreServiceClassDefinitionsMacro( (SSliceIndexPositionEditor)(::fwQml::IQmlEditor) );
@@ -65,10 +88,10 @@ Q_SIGNALS:
     void setSliceType(int type);
 
 public Q_SLOTS:
-    /// This method is called when the slider is move. Notify the slice index is modified.
+    /// This method is called when the slider is moved. Notify the slice index is modified.
     UIIMAGEQML_API void onSliceIndex(int index);
 
-    /// This method is called when the slice type selected change. Notify the slice type is modified.
+    /// This method is called when the slice type selected changes. Notify the slice type is modified.
     UIIMAGEQML_API void onSliceType( int type );
 
 protected:
@@ -76,23 +99,17 @@ protected:
     /// @brief The slice type: axial, frontal, sagittal.
     using ::fwDataTools::helper::MedicalImageAdaptor::Orientation;
 
-    /**
-     * @brief Install the layout.
-     */
-    virtual void starting() override;
+    /// Update the infromation from the image
+    UIIMAGEQML_API virtual void starting() override;
 
-    /**
-     * @brief Destroy the layout.
-     */
-    virtual void stopping() override;
+    /// Do nothing
+    UIIMAGEQML_API virtual void stopping() override;
 
     /// Update editor information from the image
-    virtual void updating() override;
+    UIIMAGEQML_API virtual void updating() override;
 
-    /**
-     * @brief Configure the editor.
-     */
-    virtual void configuring() override;
+    /// Do nothing
+    UIIMAGEQML_API virtual void configuring() override;
 
     /**
      * @brief Returns proposals to connect service slots to associated object signals,
@@ -126,11 +143,11 @@ private:
      * @}
      */
 
+    /// Define the slice type, it should only be called before starting from the qml interface
+    void configureSliceIndex(int sliceIndex);
+
     /// @brief The field IDs for the slice index.
     static const std::string* SLICE_INDEX_FIELDID[ 3 ];
-
-    int m_sliceIndex;
-
 };
 
 } // uiImageQml
