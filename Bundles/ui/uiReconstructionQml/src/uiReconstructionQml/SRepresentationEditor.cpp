@@ -12,18 +12,8 @@
 #include <fwData/Mesh.hpp>
 #include <fwData/Reconstruction.hpp>
 
-#include <fwRuntime/operations.hpp>
-
-#include <fwServices/macros.hpp>
-#include <fwServices/op/Get.hpp>
-
 namespace uiReconstructionQml
 {
-
-fwServicesRegisterMacro( ::fwQml::IQmlEditor, ::uiReconstructionQml::SRepresentationEditor,
-                         ::fwData::Reconstruction );
-
-//------------------------------------------------------------------------------
 
 static const ::fwServices::IService::KeyType s_RECONSTRUCTION_INOUT = "reconstruction";
 
@@ -102,6 +92,8 @@ void SRepresentationEditor::onChangeRepresentation( int id )
             selectedMode = ::fwData::Material::EDGE;
             break;
         }
+        default:
+            selectedMode = ::fwData::Material::SURFACE;
     }
 
     m_material->setRepresentationMode( selectedMode );
@@ -136,6 +128,8 @@ void SRepresentationEditor::onChangeShading(  int id )
             selectedMode = ::fwData::Material::PHONG;
             break;
         }
+        default:
+            selectedMode = ::fwData::Material::PHONG;
     }
 
     m_material->setShadingMode( selectedMode );
@@ -147,11 +141,6 @@ void SRepresentationEditor::onChangeShading(  int id )
 void SRepresentationEditor::onShowNormals(int state )
 {
     ::fwData::Reconstruction::sptr reconstruction = this->getInOut< ::fwData::Reconstruction >(s_RECONSTRUCTION_INOUT);
-    if (!reconstruction)
-    {
-        FW_DEPRECATED_KEY(s_RECONSTRUCTION_INOUT, "inout", "18.0");
-        reconstruction = this->getObject< ::fwData::Reconstruction >();
-    }
     SLM_ASSERT("No Reconstruction!", reconstruction);
 
     switch(state)
@@ -165,6 +154,8 @@ void SRepresentationEditor::onShowNormals(int state )
         case 3:
             m_material->setOptionsMode( ::fwData::Material::CELLS_NORMALS );
             break;
+        default:
+            m_material->setOptionsMode( ::fwData::Material::STANDARD );
     }
 
     this->notifyMaterial();
@@ -180,11 +171,6 @@ void SRepresentationEditor::onShowNormals(int state )
 void SRepresentationEditor::notifyMaterial()
 {
     ::fwData::Reconstruction::sptr reconstruction = this->getInOut< ::fwData::Reconstruction >(s_RECONSTRUCTION_INOUT);
-    if (!reconstruction)
-    {
-        FW_DEPRECATED_KEY(s_RECONSTRUCTION_INOUT, "inout", "18.0");
-        reconstruction = this->getObject< ::fwData::Reconstruction >();
-    }
     SLM_ASSERT("No Reconstruction!", reconstruction);
 
     ::fwData::Object::ModifiedSignalType::sptr sig;
@@ -199,11 +185,7 @@ void SRepresentationEditor::notifyMaterial()
 {
     KeyConnectionsMap connections;
 
-    //FIXME hack to support deprecated getObject()
-    if (this->getInOut< ::fwData::Reconstruction >(s_RECONSTRUCTION_INOUT))
-    {
-        connections.push(s_RECONSTRUCTION_INOUT, ::fwData::Object::s_MODIFIED_SIG, s_UPDATE_SLOT);
-    }
+    connections.push(s_RECONSTRUCTION_INOUT, ::fwData::Object::s_MODIFIED_SIG, s_UPDATE_SLOT);
 
     return connections;
 }

@@ -6,24 +6,11 @@
 
 #include "uiReconstructionQml/SOrganMaterialEditor.hpp"
 
-#include <fwCore/base.hpp>
-
 #include <fwData/Material.hpp>
-#include <fwData/Mesh.hpp>
 #include <fwData/Reconstruction.hpp>
-
-#include <fwRuntime/ConfigurationElement.hpp>
-#include <fwRuntime/operations.hpp>
-
-#include <fwServices/IService.hpp>
-#include <fwServices/macros.hpp>
-#include <fwServices/op/Get.hpp>
 
 namespace uiReconstructionQml
 {
-
-fwServicesRegisterMacro( ::fwQml::IQmlEditor, ::uiReconstructionQml::SOrganMaterialEditor,
-                         ::fwData::Reconstruction );
 
 static const ::fwServices::IService::KeyType s_RECONSTRUCTION_INOUT = "reconstruction";
 

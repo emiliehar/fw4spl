@@ -19,13 +19,36 @@ namespace uiReconstructionQml
 /**
  * @brief Display a widget to change the reconstruction material (color and transparency).
  *
- * @section XML XML Configuration
+ * @section QSignal Qt Signals
+ * - \b materialChanged(QColor, int): emitted when the material changed (color, opacity)
  *
- * @code{.xml}
-   <service type="::uiReconstructionQml::OrganMaterialEditor">
-       <inout key="reconstruction" uid="..." />
-   </service>
+ * @section QSlots Qt Slots
+ * - \b onOpacitySlider(int): called when the opacity changed, it will update the reconstruction Material
+ * - \b onColor(QColor): called when the opacity changed, it will update the reconstruction Material
+
+ *
+ * @section QML Qml Configuration
+ *
+ * @code{.qml}
+    SOrganMaterialEditor {
+        id: organMaterialService
+
+        onStarted: {
+            organMaterialEditor.enabled = true
+        }
+        onStopped: {
+            organMaterialEditor.enabled = false
+        }
+
+        onMaterialChanged: {
+            colorDialog.setColor(color)
+            transparencySlider.value = opacity
+        }
+    }
    @endcode
+ *
+ * @section Objects Required objects
+ *
  * @subsection In-Out In-Out
  * - \b reconstruction [::fwData::Reconstruction]: reconstruction containing the material to update.
  */
@@ -51,13 +74,13 @@ protected:
 
     typedef ::fwRuntime::ConfigurationElement::sptr Configuration;
 
-    /// Initialize the UI
+    /// Call IQmlEditor::starting
     virtual void starting() override;
 
-    /// Clean the UI
+    /// Call IQmlEditor::stopping
     virtual void stopping() override;
 
-    /// Update the UI according to the material (color and transparency widgets)
+    /// Emit a signal to update the Qml ui with the material information
     virtual void updating() override;
 
     /// Do nothing
@@ -73,7 +96,10 @@ protected:
 
 protected Q_SLOTS:
 
+    /// Called when the opacity changed, it will update the reconstruction Material
     void onOpacitySlider( int value);
+
+    /// Called when the color changed, it will update the reconstruction Material
     void onColor(QColor color);
 
 private:

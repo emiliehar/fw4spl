@@ -23,13 +23,51 @@ namespace uiReconstructionQml
 /**
  * @brief Display a widget to change the reconstruction representation (surface, point, edge, ...).
  *
- * @section XML XML Configuration
+ * @section QSignal Qt Signals
+ * - \b materialChanged(int, int, int): emitted when the material changed (representation, shading, option)
  *
- * @code{.xml}
-   <service type="::uiReconstructionQml::SRepresentationEditor">
-       <inout key="reconstruction" uid="..." />
-   </service>
+ * @section QSlots Qt Slots
+ * - \b onChangeRepresentation(int): called when the organ representation changed, it will update the reconstruction
+ * Material (1: SURFACE, 2: POINT, 3: WIREFRAME, 4: EDGE)
+ * - \b onChangeShading(int): called when the opacity changed, it will update the reconstruction Material (0: AMBIENT,
+ * 1: FLAT, 2: GOURAUD, 3: PHONG)
+ * - \b onShowNormals(int): called when the opacity changed, it will update the reconstruction Material (1: STANDARD,
+ * 2: NORMALS, 3: CELLS_NORMALS)
+ *
+ * @section QML Qml Configuration
+ *
+ * @code{.qml}
+    SRepresentationEditor {
+        id: representationService
+
+        // @disable-check M16
+        onStarted: {
+            representationEditor.enabled = true
+        }
+
+        // @disable-check M16
+        onStopped: {
+            representationEditor.enabled = false
+        }
+
+        // @disable-check M16
+        onMaterialChanged: {
+            switch (representationMode) {
+                // ...
+            }
+
+            switch (shadingMode) {
+                // ...
+            }
+
+            switch (optionMode) {
+                // ...
+            }
+        }
+    }
    @endcode
+ *
+ * @section Objects Required objects
  * @subsection In-Out In-Out
  * - \b reconstruction [::fwData::Reconstruction]: reconstruction that will be updated
  */
@@ -54,13 +92,13 @@ protected:
 
     typedef ::fwRuntime::ConfigurationElement::sptr Configuration;
 
-    /// Initialize the UI
+    /// Call IQmlEditor::starting
     virtual void starting() override;
 
-    /// Clean the UI
+    /// Call IQmlEditor::stopping
     virtual void stopping() override;
 
-    /// Update the UI according to the reconstruction
+    /// Emit a signal to update the Qml ui with the material information
     virtual void updating() override;
 
     /// Do nothing.
@@ -79,8 +117,11 @@ protected:
 
 protected Q_SLOTS:
 
+    /// Called when the organ representation changed, it will update the reconstruction Material
     void onChangeRepresentation( int id );
+    /// Called when the organ shading changed, it will update the reconstruction Material
     void onChangeShading( int id );
+    /// Called when the organ normal option changed, it will update the reconstruction Material
     void onShowNormals(int state );
 
 private:

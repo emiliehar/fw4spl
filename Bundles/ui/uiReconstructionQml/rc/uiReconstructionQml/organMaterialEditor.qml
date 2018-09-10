@@ -20,13 +20,16 @@ Item {
     SOrganMaterialEditor {
         id: organMaterialService
 
+        // @disable-check M16
         onStarted: {
             organMaterialEditor.enabled = true
         }
+        // @disable-check M16
         onStopped: {
             organMaterialEditor.enabled = false
         }
 
+        // @disable-check M16
         onMaterialChanged: {
             colorDialog.setColor(color)
             transparencySlider.value = opacity
