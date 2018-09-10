@@ -11,7 +11,6 @@
 
 #include <fwQml/IQmlEditor.hpp>
 
-#include <QIdentityProxyModel>
 #include <QObject>
 
 namespace uiMedDataQml
@@ -20,17 +19,35 @@ namespace uiMedDataQml
 /**
  * @brief   SModelSeriesList service allows to manage the ModelSeries organs.
  *
- *  @section Signals Signals
+ * @section Signals Signals
  * - \b reconstructionSelected(::fwData::Object::sptr): this signal emits the selected reconstruction
  * - \b emptiedSelection(): this signal is emitted when no reconstruction is selected
  *
- * @section XML XML Configuration
+ * @section QSlots Qt Slots
+ * - \b onOrganSelected(int): called when an organ is selected, the index represents the index of the selected
+ *      reconstruction into the modelSeries
+ * - \b onShowReconstructions(int): called to show/hide all the reconstructions
+ * - \b onOrganVisibilityChanged(int, bool): called to show/hide a reconstruction
+ * - \b onCheckAllBoxes(bool): called when the organ's check box are checked/unchecked and thus shown/hidden
  *
- * @code{.xml}
-   <service uid="..." type="::uiMedDataQml::SModelSeriesList" autoConnect="yes">
-       <inout key="modelSeries" uid="..." autoConnect="yes" />
-   </service>
+ * @section QML Qml Configuration
+ *
+ * @code{.qml}
+    SModelSeriesList {
+        id: modelSeriesList
+
+        // @disable-check M16
+        listModel: organListModel
+
+        // @disable-check M16
+        onStarted: {
+            modelList.enabled = true
+        }
+    }
    @endcode
+ *
+ * @section Objects Required objects
+ *
  * @subsection In-Out In-Out
  * - \b modelSeries [::fwMedData::ModelSeries]: model series containing the organs to list
  */
@@ -48,21 +65,18 @@ public:
     /// Destructor. Do nothing.
     UIMEDDATAQML_API virtual ~SModelSeriesList() noexcept;
 
-Q_SIGNALS:
-
-public Q_SLOTS:
-
 protected:
 
-    ///This method launches the IEditor::starting method.
+    /// Call the IQmlEditor::starting method.
     virtual void starting() override;
 
-    ///This method launches the IEditor::stopping method.
+    /// Call the IQmlEditor::stopping method.
     virtual void stopping() override;
 
+    /// Update the list model with the modelSeries items
     virtual void updating() override;
 
-    /// Configures the editor.
+    /// Do nothing
     virtual void configuring() override;
 
     /**
@@ -83,12 +97,17 @@ protected:
 
 protected Q_SLOTS:
 
+    /// Called when an organ is selected, the index represents the index of the selected reconstruction into the
+    // modelSeries
     void onOrganSelected(int index);
 
+    /// Called when the reconstruction should be shown/hidden
     void onShowReconstructions(int state);
 
+    /// Called when the visibility of an organ should change
     void onOrganVisibilityChanged(int index, bool visible);
 
+    // Called when all the reconstruction are checked/unchecked, and
     void onCheckAllBoxes(bool checked);
 
 private:

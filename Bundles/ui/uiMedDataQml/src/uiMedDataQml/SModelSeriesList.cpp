@@ -7,16 +7,9 @@
 #include "uiMedDataQml/SModelSeriesList.hpp"
 
 #include <fwCom/Signal.hxx>
-#include <fwCom/Slot.hxx>
-#include <fwCom/Slots.hxx>
-
-#include <fwCore/base.hpp>
 
 #include <fwData/Boolean.hpp>
-#include <fwData/Float.hpp>
-#include <fwData/Integer.hpp>
 #include <fwData/Reconstruction.hpp>
-#include <fwData/String.hpp>
 
 #include <fwDataTools/helper/Field.hpp>
 

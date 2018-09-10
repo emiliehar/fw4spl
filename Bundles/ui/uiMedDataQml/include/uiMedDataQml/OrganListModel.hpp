@@ -38,10 +38,10 @@ public:
     UIMEDDATAQML_API virtual ~OrganListModel() noexcept;
 
     /// Return the number of rows under the given parent.
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    UIMEDDATAQML_API int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     /// Return the data stored under the given role for the item referred to by the index.
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    UIMEDDATAQML_API QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     UIMEDDATAQML_API void updateModelSeries(const ::fwMedData::ModelSeries::sptr& modelSeries);
 
