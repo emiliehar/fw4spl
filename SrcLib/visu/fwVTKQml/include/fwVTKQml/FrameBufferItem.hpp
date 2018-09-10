@@ -9,22 +9,20 @@
 #include "fwVTKQml/config.hpp"
 #include "fwVTKQml/vtkInternalOpenGLRenderWindow.hpp"
 
+#include <QMutex>
+#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_1>
+#include <QPointer>
+#include <qqmlapplicationengine.h>
+
+#include <QtQuick/QQuickFramebufferObject>
+
+#include <QVTKInteractorAdapter.h>
 #include <vtkEventQtSlotConnect.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkSmartPointer.h>
-
-#include <QVTKInteractorAdapter.h>
-
-#include <QtQuick/QQuickFramebufferObject>
-// Use the OpenGL API abstraction from Qt instead of from VTK because vtkgl.h
-// and other Qt OpenGL-related headers do not play nice when included in the
-// same compilation unit
-#include <QOpenGLFunctions>
-#include <qqmlapplicationengine.h>
-#include <QPointer>
-#include <QMutex>
 
 namespace fwVTKQml
 {
@@ -32,13 +30,19 @@ namespace fwVTKQml
 class FrameBufferItem;
 
 /**
- * @brief FrameBuffer renderer, it is used to render the VTK scene into a qml interface
+ * @brief FrameBuffer renderer, it is used to render the VTK scene into a qml interface.
+ *
+ * Use the OpenGL API abstraction from Qt instead of from VTK because vtkgl.h
+ * and other Qt OpenGL-related headers do not play nice when included in the
+ * same compilation unit
  */
 class FWVTKQML_CLASS_API FrameBufferRenderer : public QObject,
-                                               public QQuickFramebufferObject::Renderer
+                                               public QQuickFramebufferObject::Renderer,
+                                               protected QOpenGLFunctions_3_1
 {
 Q_OBJECT
 public:
+
     FWVTKQML_API FrameBufferRenderer(vtkInternalOpenGLRenderWindow*, FrameBufferItem*);
     FWVTKQML_API ~FrameBufferRenderer();
     /**
@@ -46,30 +50,27 @@ public:
      * @param size: size of the framebuffer
      * @return QOpenGLFrameBufferObject: View where will be perform openGL command (VTK)
      */
-    QOpenGLFramebufferObject FWVTKQML_API* createFramebufferObject(const QSize& size);
+    FWVTKQML_API QOpenGLFramebufferObject* createFramebufferObject(const QSize& size);
 
     /**
      * @brief render: perform open GL command
      */
-    void FWVTKQML_API   render();
+    FWVTKQML_API void render();
 
     /**
      * @brief: synchronize m_item when frame is ready
      */
-    virtual void FWVTKQML_API synchronize(QQuickFramebufferObject*);
-
-    FrameBufferItem const* getItem() const;
+    FWVTKQML_API virtual void synchronize(QQuickFramebufferObject*);
 
 Q_SIGNALS:
     /**
      * @brief ready
      * Emit when frame is ready
      */
-    void    ready();
+    void ready();
 
 private:
     vtkInternalOpenGLRenderWindow* m_vtkRenderWindow;
-    QOpenGLFramebufferObject* m_framebufferObject;
     FrameBufferItem* m_item;
     bool m_readyToRender;
 
@@ -92,15 +93,9 @@ public:
      */
     FWVTKQML_API QQuickFramebufferObject::Renderer* createRenderer() const override;
     /**
-     *  @brief: return m_win
+     *  @brief: return vtk render window
      */
     FWVTKQML_API vtkInternalOpenGLRenderWindow* getRenderWindow() const;
-
-    /**
-     * @brief getRenderer
-     * @return current renderer
-     */
-    FWVTKQML_API vtkSmartPointer<vtkRenderer>    getRenderer() const;
 
     /// Lock the renderer
     FWVTKQML_API void    lockRenderer();
@@ -134,16 +129,13 @@ Q_SIGNALS:
     /**
      * @brief ready: emit when FrameBufferItem is ready
      */
-    void    ready();
+    void ready();
 
 private:
     vtkSmartPointer<vtkInternalOpenGLRenderWindow> m_win;
     QPointer<QVTKInteractorAdapter> m_interactorAdapter;
-    vtkSmartPointer<vtkRenderer>    m_renderer;
     vtkSmartPointer<vtkRenderWindowInteractor> m_interactor;
     QMutex m_viewLock;
-
-    friend class FrameBufferRenderer;
 };
 
 } // fwVTKQml

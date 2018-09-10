@@ -32,19 +32,17 @@ namespace fwVTKQml
 
 FrameBufferRenderer::FrameBufferRenderer(vtkInternalOpenGLRenderWindow* rw, FrameBufferItem* item) :
     m_vtkRenderWindow(rw),
-    m_framebufferObject(0),
     m_item(item),
     m_readyToRender(false)
 {
     m_vtkRenderWindow->Register(NULL);
-    m_vtkRenderWindow->setRenderer(this);
+    m_vtkRenderWindow->OpenGLInitContext();
 }
 
 //-----------------------------------------------------------------------------
 
 FrameBufferRenderer::~FrameBufferRenderer()
 {
-    m_vtkRenderWindow->setRenderer(0);
     m_vtkRenderWindow->Delete();
 }
 
@@ -52,15 +50,19 @@ FrameBufferRenderer::~FrameBufferRenderer()
 
 QOpenGLFramebufferObject* FrameBufferRenderer::createFramebufferObject(const QSize& size)
 {
+    this->initializeOpenGLFunctions();
+
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
     format.setTextureTarget(GL_TEXTURE_2D);
     format.setInternalTextureFormat(GL_RGBA);
     format.setSamples(0);
-    m_framebufferObject = new QOpenGLFramebufferObject(size, format);
-    m_vtkRenderWindow->setFrameBufferObject(m_framebufferObject);
+
+    // No need to delete this pointer, its managed by Qt
+    auto framebufferObject = new QOpenGLFramebufferObject(size, format);
+    m_vtkRenderWindow->setFrameBufferObject(framebufferObject);
     m_item->ready();
-    return m_framebufferObject;
+    return framebufferObject;
 }
 
 //------------------------------------------------------------------------------------------
@@ -75,30 +77,21 @@ void FrameBufferRenderer::render()
     m_item->lockRenderer();
     m_vtkRenderWindow->Start();
     m_vtkRenderWindow->internalRender(); // vtkXOpenGLRenderWindow renders the scene to the FBO
-
+    m_item->window()->resetOpenGLState();
+    this->glDrawBuffer(GL_BACK);
     m_item->unlockRenderer();
-}
-
-//------------------------------------------------------------------------------
-
-FrameBufferItem const* FrameBufferRenderer::getItem() const
-{
-    return m_item;
 }
 
 //-----------------------------------------------------------------------------
 
 void FrameBufferRenderer::synchronize(QQuickFramebufferObject* item)
 {
-    if (!m_framebufferObject)
-    {
-        FrameBufferItem* vtkItem = static_cast<FrameBufferItem*>(item);
-        vtkItem->initialize();
-        m_readyToRender = true;
-
-    }
+    FrameBufferItem* vtkItem = static_cast<FrameBufferItem*>(item);
+    vtkItem->initialize();
+    m_readyToRender = true;
 }
 
+//------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------
 
 FrameBufferItem::FrameBufferItem(QQuickItem* parent) :
@@ -107,18 +100,14 @@ FrameBufferItem::FrameBufferItem(QQuickItem* parent) :
     m_interactorAdapter(nullptr)
 {
     this->setMirrorVertically(true);
-    this->setAcceptTouchEvents(true);
-    m_renderer = vtkSmartPointer<vtkRenderer>::New();
     this->setAcceptedMouseButtons(Qt::AllButtons);
     m_win = vtkSmartPointer<vtkInternalOpenGLRenderWindow>::New();
     m_win->SetSize(static_cast<int>(this->width()), static_cast<int>(this->height()));
-    m_win->AddRenderer(m_renderer);
+    m_win->setFrameBufferItem(this);
+
     m_interactor = vtkSmartPointer<QVTKInteractor>::New();
     m_win->SetInteractor(m_interactor);
     m_interactorAdapter = new QVTKInteractorAdapter(this);
-    vtkSmartPointer<vtkInteractorStyleTrackballCamera> style =
-        vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New();
-    m_interactor->SetInteractorStyle(style);
 }
 
 //-----------------------------------------------------------------------------
@@ -144,13 +133,6 @@ QQuickFramebufferObject::Renderer* FrameBufferItem::createRenderer() const
     connect(renderer, SIGNAL(ready()), this, SIGNAL(ready()));
     m_interactor->Initialize();
     return renderer;
-}
-
-//-----------------------------------------------------------------------------
-
-vtkSmartPointer<vtkRenderer>    FrameBufferItem::getRenderer() const
-{
-    return m_renderer;
 }
 
 //-----------------------------------------------------------------------------
@@ -194,11 +176,11 @@ bool FrameBufferItem::event(QEvent* evt)
 
 void FrameBufferItem::mousePressEvent(QMouseEvent* event)
 {
-    if (this->m_win && this->m_win->GetInteractor())
+    if (m_win && m_win->GetInteractor())
     {
-        lockRenderer();
-        this->m_interactorAdapter->ProcessEvent(event, this->m_win->GetInteractor());
-        unlockRenderer();
+        this->lockRenderer();
+        m_interactorAdapter->ProcessEvent(event, m_win->GetInteractor());
+        this->unlockRenderer();
     }
 }
 
@@ -206,11 +188,11 @@ void FrameBufferItem::mousePressEvent(QMouseEvent* event)
 
 void FrameBufferItem::mouseMoveEvent(QMouseEvent* event)
 {
-    if (this->m_win && this->m_win->GetInteractor())
+    if (m_win && m_win->GetInteractor())
     {
-        lockRenderer();
-        this->m_interactorAdapter->ProcessEvent(event, this->m_win->GetInteractor());
-        unlockRenderer();
+        this->lockRenderer();
+        m_interactorAdapter->ProcessEvent(event, m_win->GetInteractor());
+        this->unlockRenderer();
     }
 }
 
@@ -218,11 +200,11 @@ void FrameBufferItem::mouseMoveEvent(QMouseEvent* event)
 
 void FrameBufferItem::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (this->m_win && this->m_win->GetInteractor())
+    if (m_win && m_win->GetInteractor())
     {
-        lockRenderer();
-        this->m_interactorAdapter->ProcessEvent(event, this->m_win->GetInteractor());
-        unlockRenderer();
+        this->lockRenderer();
+        m_interactorAdapter->ProcessEvent(event, m_win->GetInteractor());
+        this->unlockRenderer();
     }
 }
 
@@ -230,11 +212,11 @@ void FrameBufferItem::mouseReleaseEvent(QMouseEvent* event)
 
 void FrameBufferItem::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    if (this->m_win && this->m_win->GetInteractor())
+    if (m_win && m_win->GetInteractor())
     {
-        lockRenderer();
-        this->m_interactorAdapter->ProcessEvent(event, this->m_win->GetInteractor());
-        unlockRenderer();
+        this->lockRenderer();
+        m_interactorAdapter->ProcessEvent(event, m_win->GetInteractor());
+        this->unlockRenderer();
     }
 }
 

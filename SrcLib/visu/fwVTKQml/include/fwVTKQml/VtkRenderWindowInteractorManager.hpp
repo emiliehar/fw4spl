@@ -50,7 +50,7 @@ public:
     FWVTKQML_API virtual void uninstallInteractor() override;
 
     /// Return a pointer on interactor
-    FWVTKQML_API virtual ::vtkRenderWindowInteractor* getInteractor() override;
+    FWVTKQML_API virtual vtkRenderWindowInteractor* getInteractor() override;
 
     /// Set the qml frame buffer item used to render the scene
     FWVTKQML_API void setFrameBuffer(QPointer< ::fwVTKQml::FrameBufferItem > frameBuffer );

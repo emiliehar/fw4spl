@@ -66,7 +66,7 @@ void VtkRenderWindowInteractorManager::uninstallInteractor()
 
 //-----------------------------------------------------------------------------
 
-::vtkRenderWindowInteractor* VtkRenderWindowInteractorManager::getInteractor()
+vtkRenderWindowInteractor* VtkRenderWindowInteractorManager::getInteractor()
 {
     OSLM_ASSERT("FrameBuffer is not defined", m_frameBufferItem);
     OSLM_ASSERT("RenderWindow is not defined", m_frameBufferItem->getRenderWindow());

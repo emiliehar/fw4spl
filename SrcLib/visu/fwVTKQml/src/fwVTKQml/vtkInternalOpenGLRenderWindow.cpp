@@ -8,6 +8,8 @@
 
 #include "fwVTKQml/FrameBufferItem.hpp"
 
+#include <fwCore/spyLog.hpp>
+
 #include <QQuickWindow>
 
 #include <chrono>
@@ -16,9 +18,8 @@ namespace fwVTKQml
 {
 
 vtkInternalOpenGLRenderWindow::vtkInternalOpenGLRenderWindow() :
-    m_qtParentRenderer(0)
+    m_fbItem(nullptr)
 {
-    this->OffScreenRenderingOn();
 }
 
 vtkInternalOpenGLRenderWindow::~vtkInternalOpenGLRenderWindow()
@@ -31,10 +32,7 @@ vtkInternalOpenGLRenderWindow::~vtkInternalOpenGLRenderWindow()
 void vtkInternalOpenGLRenderWindow::OpenGLInitState()
 {
     this->MakeCurrent();
-    this->initializeOpenGLFunctions();
-
     Superclass::OpenGLInitState();
-
 }
 
 //------------------------------------------------------------------------------
@@ -48,32 +46,23 @@ void vtkInternalOpenGLRenderWindow::OpenGLEndState()
 void vtkInternalOpenGLRenderWindow::internalRender()
 {
     Superclass::Render();
-    this->m_qtParentRenderer->getItem()->window()->resetOpenGLState();
-    this->glDrawBuffer(GL_BACK);
 }
 
 //------------------------------------------------------------------------------
 
 void vtkInternalOpenGLRenderWindow::Render()
 {
-    if (this->m_qtParentRenderer)
+    if (m_fbItem)
     {
-        this->m_qtParentRenderer->update();
+        m_fbItem->update();
     }
 }
 
 //------------------------------------------------------------------------------
 
-void vtkInternalOpenGLRenderWindow::setRenderer(FrameBufferRenderer* renderer)
+void vtkInternalOpenGLRenderWindow::setFrameBufferItem(FrameBufferItem* fbItem)
 {
-    this->m_qtParentRenderer = renderer;
-}
-
-//------------------------------------------------------------------------------
-
-FrameBufferRenderer* vtkInternalOpenGLRenderWindow::getRenderer() const
-{
-    return m_qtParentRenderer;
+    m_fbItem = fbItem;
 }
 
 //------------------------------------------------------------------------------

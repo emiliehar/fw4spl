@@ -9,7 +9,6 @@
 # include "fwVTKQml/config.hpp"
 
 #include <QOpenGLFramebufferObject>
-#include <QOpenGLFunctions_3_1>
 #include <QQuickFramebufferObject>
 #include <vtkCamera.h>
 #include <vtkExternalOpenGLRenderWindow.h>
@@ -20,13 +19,12 @@
 namespace fwVTKQml
 {
 
-class FrameBufferRenderer;
+class FrameBufferItem;
 
 /**
  * @brief This class is used to render a offscreen VTK window in a FrameBuffer
  */
-class FWVTKQML_CLASS_API vtkInternalOpenGLRenderWindow : public vtkExternalOpenGLRenderWindow,
-                                                         protected QOpenGLFunctions_3_1
+class FWVTKQML_CLASS_API vtkInternalOpenGLRenderWindow : public vtkExternalOpenGLRenderWindow
 {
 public:
     friend class FrameBufferRenderer;
@@ -34,22 +32,15 @@ public:
     static vtkInternalOpenGLRenderWindow* New();
     vtkTypeMacro(vtkInternalOpenGLRenderWindow, vtkExternalOpenGLRenderWindow);
 
-protected:
-    /// Constructor
-    FWVTKQML_API vtkInternalOpenGLRenderWindow();
-    /// Destructor
-    FWVTKQML_API ~vtkInternalOpenGLRenderWindow();
-
-public:
     /**
      *  @brief: initialize openGL context/functions
      */
-    virtual FWVTKQML_API void OpenGLInitState() override;
+    FWVTKQML_API virtual void OpenGLInitState() override;
 
-    virtual FWVTKQML_API void OpenGLEndState();
+    FWVTKQML_API virtual void OpenGLEndState();
 
     /// Call render method of the renderer
-    virtual FWVTKQML_API void Render() override;
+    FWVTKQML_API virtual void Render() override;
 
     /// Render into the framebuffer
     FWVTKQML_API void  internalRender();
@@ -58,15 +49,18 @@ public:
     FWVTKQML_API void setFrameBufferObject(QOpenGLFramebufferObject*);
 
     /// Set the renderer
-    FWVTKQML_API void setRenderer(FrameBufferRenderer*);
+    FWVTKQML_API void setFrameBufferItem(FrameBufferItem*);
 
-    /// Return the renderer
-    FWVTKQML_API FrameBufferRenderer* getRenderer() const;
+protected:
+    /// Constructor
+    FWVTKQML_API vtkInternalOpenGLRenderWindow();
+    /// Destructor
+    FWVTKQML_API ~vtkInternalOpenGLRenderWindow();
 
 private:
 
     /// Frame renderer
-    FrameBufferRenderer* m_qtParentRenderer;
+    FrameBufferItem* m_fbItem;
 };
 
 } //namespace fwVTKQml
