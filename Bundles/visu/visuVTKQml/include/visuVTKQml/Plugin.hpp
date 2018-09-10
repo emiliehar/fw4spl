@@ -13,7 +13,7 @@
 namespace visuVTKQml
 {
 /**
- * @brief   This class is started when the bundles is loaded.
+ * @brief   This class is started when the bundle is loaded.
  */
 struct VISUVTKQML_CLASS_API Plugin : public ::fwRuntime::Plugin
 {

@@ -8,13 +8,7 @@
 
 #include "Tuto08GenericSceneQml/config.hpp"
 
-#include <fwData/Image.hpp>
-
-#include <fwMedData/ImageSeries.hpp>
-#include <fwMedData/ModelSeries.hpp>
-
 #include <fwServices/AppManager.hpp>
-#include <fwServices/IService.hpp>
 
 #include <fwVTKQml/FrameBufferItem.hpp>
 
@@ -24,7 +18,7 @@ namespace Tuto08GenericSceneQml
 {
 
 /**
- * @brief   This class is started when the bundles is loaded.
+ * @brief   This class manages the services used by the Application. It is launched by the qml file 'ui.qml'
  */
 class TUTO08GENERICSCENEQML_CLASS_API AppManager : public QObject,
                                                    public ::fwServices::AppManager

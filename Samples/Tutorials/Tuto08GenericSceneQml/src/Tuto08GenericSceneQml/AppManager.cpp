@@ -8,8 +8,9 @@
 
 #include <fwDataTools/fieldHelper/Image.hpp>
 #include <fwDataTools/fieldHelper/MedicalImageHelpers.hpp>
-#include <fwDataTools/helper/Image.hpp>
-#include <fwDataTools/helper/MedicalImageAdaptor.hpp>
+
+#include <fwMedData/ImageSeries.hpp>
+#include <fwMedData/ModelSeries.hpp>
 
 #include <fwQml/IQmlEditor.hpp>
 
@@ -17,8 +18,6 @@
 #include <fwRenderVTK/SRender.hpp>
 
 #include <fwServices/op/Add.hpp>
-#include <fwServices/op/Get.hpp>
-#include <fwServices/registry/ActiveWorkers.hpp>
 #include <fwServices/registry/ObjectService.hpp>
 
 #include <fwVTKQml/VtkRenderWindowInteractorManager.hpp>

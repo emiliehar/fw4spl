@@ -12,12 +12,9 @@
 #include <fwCore/spyLog.hpp>
 
 #include <fwData/Image.hpp>
-#include <fwData/Integer.hpp>
 
-#include <fwDataTools/fieldHelper/Image.hpp>
 #include <fwDataTools/fieldHelper/MedicalImageHelpers.hpp>
 #include <fwDataTools/helper/Image.hpp>
-#include <fwDataTools/helper/MedicalImageAdaptor.hpp>
 
 #include <fwMedData/ImageSeries.hpp>
 #include <fwMedData/ModelSeries.hpp>
@@ -28,7 +25,6 @@
 #include <fwRenderVTK/SRender.hpp>
 
 #include <fwServices/op/Add.hpp>
-#include <fwServices/op/Get.hpp>
 #include <fwServices/registry/ActiveWorkers.hpp>
 #include <fwServices/registry/ObjectService.hpp>
 #include <fwServices/registry/Proxy.hpp>

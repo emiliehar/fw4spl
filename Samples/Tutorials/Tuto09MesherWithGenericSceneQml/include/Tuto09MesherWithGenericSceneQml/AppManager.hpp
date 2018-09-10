@@ -10,13 +10,10 @@
 
 #include <fwCom/SlotBase.hpp>
 
-#include <fwData/Reconstruction.hpp>
-
 #include <fwMedData/ImageSeries.hpp>
 #include <fwMedData/ModelSeries.hpp>
 
 #include <fwServices/AppManager.hpp>
-#include <fwServices/IService.hpp>
 
 #include <fwVTKQml/FrameBufferItem.hpp>
 
@@ -26,7 +23,7 @@ namespace Tuto09MesherWithGenericSceneQml
 {
 
 /**
- * @brief   This class is started when the bundles is loaded.
+ * @brief   This class manages the services used by the Application. It is launched by the qml file 'ui.qml'
  */
 class TUTO09MESHERWITHGENERICSCENEQML_CLASS_API AppManager : public QObject,
                                                              public ::fwServices::AppManager

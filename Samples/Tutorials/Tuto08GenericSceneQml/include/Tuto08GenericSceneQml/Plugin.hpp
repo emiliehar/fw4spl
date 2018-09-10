@@ -14,7 +14,7 @@ namespace Tuto08GenericSceneQml
 {
 
 /**
- * @brief   This class is started when the bundles is loaded.
+ * @brief   This class is started when the bundle is loaded.
  */
 class TUTO08GENERICSCENEQML_CLASS_API Plugin : public ::fwRuntime::Plugin
 {
@@ -25,7 +25,7 @@ public:
     /// Destructor. Do nothing.
     TUTO08GENERICSCENEQML_API ~Plugin() noexcept;
 
-    /// Overrides start method. .
+    /// Overrides start method.
     TUTO08GENERICSCENEQML_API void start();
 
     /// Overrides stop method. Do nothing

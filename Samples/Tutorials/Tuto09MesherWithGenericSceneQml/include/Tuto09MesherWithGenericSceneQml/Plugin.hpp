@@ -14,7 +14,7 @@ namespace Tuto09MesherWithGenericSceneQml
 {
 
 /**
- * @brief   This class is started when the bundles is loaded.
+ * @brief   This class is started when the bundle is loaded.
  */
 class TUTO09MESHERWITHGENERICSCENEQML_CLASS_API Plugin : public ::fwRuntime::Plugin
 {
