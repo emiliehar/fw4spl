@@ -8,12 +8,6 @@
 
 #include "fwVTKQml/FrameBufferItem.hpp"
 
-#include <fwCore/spyLog.hpp>
-
-#include <QQuickWindow>
-
-#include <chrono>
-
 namespace fwVTKQml
 {
 

@@ -38,8 +38,8 @@ static const std::string s_IMAGE_ID          = "image";
 static const std::string s_MODELSERIES_ID    = "modelSeries";
 static const std::string s_RECONSTRUCTION_ID = "reconstruction";
 
-static const std::string s_recSelectedChannel    = "recSelected";
-static const std::string s_emptySelectionChannel = "emptySelection";
+static const std::string s_REC_SELECTED_CHANNEL    = "recSelected";
+static const std::string s_EMPTY_SELECTION_CHANNEL = "emptySelection";
 
 //------------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ void AppManager::initialize()
         };
     m_slotRecSelected = ::fwCom::newSlot(recSelectedFct);
     m_slotRecSelected->setWorker(worker);
-    proxy->connect(s_recSelectedChannel, m_slotRecSelected);
+    proxy->connect(s_REC_SELECTED_CHANNEL, m_slotRecSelected);
 
     std::function<void()>  emptySelectionFct =
         [ = ] ()
@@ -84,7 +84,7 @@ void AppManager::initialize()
         };
     m_slotEmptySelection = ::fwCom::newSlot(emptySelectionFct);
     m_slotEmptySelection->setWorker(worker);
-    proxy->connect(s_emptySelectionChannel, m_slotEmptySelection);
+    proxy->connect(s_EMPTY_SELECTION_CHANNEL, m_slotEmptySelection);
 }
 
 //------------------------------------------------------------------------------
@@ -94,8 +94,8 @@ void AppManager::uninitialize()
     this->stopAndUnregisterServices();
 
     auto proxy = ::fwServices::registry::Proxy::getDefault();
-    proxy->disconnect(s_recSelectedChannel, m_slotRecSelected);
-    proxy->disconnect(s_emptySelectionChannel, m_slotEmptySelection);
+    proxy->disconnect(s_REC_SELECTED_CHANNEL, m_slotRecSelected);
+    proxy->disconnect(s_EMPTY_SELECTION_CHANNEL, m_slotEmptySelection);
 }
 
 //------------------------------------------------------------------------------
@@ -284,8 +284,8 @@ void AppManager::onServiceCreated(const QVariant& obj)
             this->registerObject(srv, s_MODELSERIES_ID, "modelSeries",  ::fwServices::IService::AccessType::INOUT,
                                  true);
 
-            this->connectSignal(s_recSelectedChannel, srv, "reconstructionSelected");
-            this->connectSignal(s_emptySelectionChannel, srv, "emptiedSelection");
+            this->connectSignal(s_REC_SELECTED_CHANNEL, srv, "reconstructionSelected");
+            this->connectSignal(s_EMPTY_SELECTION_CHANNEL, srv, "emptiedSelection");
         }
         else if (srv->isA("::uiReconstructionQml::SOrganMaterialEditor"))
         {

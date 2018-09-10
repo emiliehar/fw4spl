@@ -10,15 +10,12 @@
 #include "fwVTKQml/vtkInternalOpenGLRenderWindow.hpp"
 
 #include <QMutex>
-#include <QOpenGLFunctions>
 #include <QOpenGLFunctions_3_1>
 #include <QPointer>
-#include <qqmlapplicationengine.h>
 
 #include <QtQuick/QQuickFramebufferObject>
 
 #include <QVTKInteractorAdapter.h>
-#include <vtkEventQtSlotConnect.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>

@@ -79,7 +79,7 @@ class IVtkRenderWindowInteractorManager;
  *   is responsible of triggering the rendering when its slot "requestRender" is called. If renderMode="timer" the scene
  *   is rendered at N frames per second (N is defined by fps tag). If renderMode="none" you should call 'render' slot
  *   to render the scene.
- * - \b useContainer(optional, default: false): if true, it call the gui methods create and initialize. Automaticcaly
+ * - \b useContainer(optional, default: false): if true, it calls the gui methods create and initialize. Automaticcaly
  *      set to false when using offscreen.
  * - \b width (optional, "1280" by default): width for off screen render
  * - \b height (optional, "720" by default): height for off screen render

@@ -6,23 +6,8 @@
 
 #include "fwVTKQml/VtkRenderWindowInteractorManager.hpp"
 
-#include <fwCom/Signal.hpp>
-#include <fwCom/Signal.hxx>
-
-#include <fwData/String.hpp>
-
-#include <fwGuiQt/container/QtContainer.hpp>
-
 #include <fwRenderVTK/registry/macros.hpp>
 
-#include <fwTools/UUID.hpp>
-
-#include <QDropEvent>
-#include <QEvent>
-#include <QMimeData>
-#include <QSurfaceFormat>
-#include <QVBoxLayout>
-#include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>

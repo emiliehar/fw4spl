@@ -6,15 +6,10 @@
 
 #pragma once
 
-# include "fwVTKQml/config.hpp"
+#include "fwVTKQml/config.hpp"
 
 #include <QOpenGLFramebufferObject>
-#include <QQuickFramebufferObject>
-#include <vtkCamera.h>
 #include <vtkExternalOpenGLRenderWindow.h>
-#include <vtkGenericOpenGLRenderWindow.h>
-#include <vtkObjectFactory.h>
-#include <vtkRendererCollection.h>
 
 namespace fwVTKQml
 {

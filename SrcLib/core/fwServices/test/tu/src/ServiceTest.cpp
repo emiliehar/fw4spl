@@ -92,7 +92,7 @@ void ServiceTest::testServiceCreationWithMultipleData()
     ::fwData::Integer::sptr obj2 = ::fwData::Integer::New();
     ::fwData::Integer::sptr obj3 = ::fwData::Integer::New();
 
-    // Test if the object support the service
+    // Test if the object supports the service
     CPPUNIT_ASSERT( ::fwServices::registry::ServiceFactory::getDefault()->support(obj1->getClassname(),
                                                                                   "::fwServices::ut::TestService") );
     typedef ::fwServices::IService::AccessType AccessType;
